@@ -1,14 +1,22 @@
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import type { Metadata, Viewport } from 'next'
+import { Inter, Instrument_Serif } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: '--font-inter',
+})
+
+const instrumentSerif = Instrument_Serif({ 
+  subsets: ["latin"],
+  weight: "400",
+  variable: '--font-instrument-serif',
+})
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'Hidden Adventures',
+  description: 'Discover and share hidden gems, scenic spots, and memorable outdoor experiences',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -29,6 +37,15 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+  themeColor: '#f8f6f2',
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +53,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-sans antialiased">
+      <body className={`${inter.variable} ${instrumentSerif.variable} font-sans antialiased`}>
         {children}
         <Analytics />
       </body>
