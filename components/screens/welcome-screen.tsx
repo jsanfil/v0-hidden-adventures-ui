@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
 import { Compass } from "lucide-react"
 
 export function WelcomeScreen() {
@@ -40,19 +39,12 @@ export function WelcomeScreen() {
           
           {/* CTAs */}
           <div className="space-y-3">
-            <Button 
-              className="w-full h-13 text-base font-medium rounded-2xl bg-white text-foreground hover:bg-white/95 shadow-lg"
-              size="lg"
-            >
+            <button className="w-full py-4 text-base font-medium rounded-2xl bg-white text-foreground hover:bg-white/95 shadow-lg transition-colors">
               Create Account
-            </Button>
-            <Button 
-              variant="ghost" 
-              className="w-full h-13 text-base font-medium rounded-2xl text-white hover:bg-white/10 border border-white/30"
-              size="lg"
-            >
+            </button>
+            <button className="w-full py-4 text-base font-medium rounded-2xl text-white hover:bg-white/10 border border-white/30 transition-colors">
               Sign In
-            </Button>
+            </button>
           </div>
           
           <p className="text-center text-white/60 text-xs px-4">

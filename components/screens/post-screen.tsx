@@ -168,7 +168,7 @@ export function PostScreen() {
             </button>
           </div>
 
-          <div className="px-5 pb-8 flex flex-col gap-5">
+          <div className="px-5 pb-28 flex flex-col gap-5">
             {/* Title */}
             <div>
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Title</label>

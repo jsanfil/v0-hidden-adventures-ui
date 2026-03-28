@@ -2,7 +2,6 @@
 
 import Image from "next/image"
 import { ChevronLeft, Share2, Bookmark, MapPin, Star, Clock, TrendingUp, Heart, MessageCircle, Navigation, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export function AdventureDetailScreen() {
@@ -106,9 +105,9 @@ export function AdventureDetailScreen() {
               <p className="text-sm font-medium text-foreground">Shared by Sarah K.</p>
               <p className="text-xs text-muted-foreground">Local Explorer · 48 adventures</p>
             </div>
-            <Button variant="outline" size="sm" className="rounded-full text-xs">
+            <button className="px-3 py-1.5 rounded-full text-xs font-medium border border-border text-foreground bg-card hover:bg-secondary transition-colors">
               Follow
-            </Button>
+            </button>
           </div>
           
           {/* Description */}
@@ -201,10 +200,10 @@ export function AdventureDetailScreen() {
           <div className="flex-1">
             <p className="text-xs text-muted-foreground">2,431 people saved this</p>
           </div>
-          <Button className="flex-1 h-12 rounded-2xl text-base font-medium">
-            <Navigation className="w-5 h-5 mr-2" />
+          <button className="flex-1 h-12 rounded-2xl text-base font-medium bg-primary text-primary-foreground flex items-center justify-center gap-2 transition-colors hover:opacity-90">
+            <Navigation className="w-5 h-5" />
             Start Adventure
-          </Button>
+          </button>
         </div>
       </div>
     </div>

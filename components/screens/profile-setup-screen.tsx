@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { ChevronLeft, Camera, MapPin } from "lucide-react"
@@ -74,12 +73,9 @@ export function ProfileSetupScreen() {
         
         {/* CTA */}
         <div className="pt-4">
-          <Button 
-            className="w-full h-13 text-base font-medium rounded-2xl shadow-sm"
-            size="lg"
-          >
+          <button className="w-full py-4 text-base font-medium rounded-2xl shadow-sm bg-primary text-primary-foreground transition-colors hover:opacity-90">
             Continue
-          </Button>
+          </button>
         </div>
       </div>
     </div>
