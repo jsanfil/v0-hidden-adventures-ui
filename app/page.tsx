@@ -7,6 +7,7 @@ import { ProfileSetupScreen } from "@/components/screens/profile-setup-screen"
 import { HomeFeedScreen } from "@/components/screens/home-feed-screen"
 import { MapExploreScreen } from "@/components/screens/map-explore-screen"
 import { AdventureDetailScreen } from "@/components/screens/adventure-detail-screen"
+import { SavedScreen } from "@/components/screens/saved-screen"
 import { cn } from "@/lib/utils"
 
 const screens = [
@@ -14,6 +15,7 @@ const screens = [
   { id: "profile", name: "Profile Setup", component: ProfileSetupScreen },
   { id: "home", name: "Home Feed", component: HomeFeedScreen },
   { id: "map", name: "Map Explore", component: MapExploreScreen },
+  { id: "saved", name: "Saved", component: SavedScreen },
   { id: "detail", name: "Adventure Detail", component: AdventureDetailScreen },
 ]
 
@@ -32,26 +34,25 @@ export default function Page() {
         </p>
       </header>
 
-      {/* Screen Navigation */}
-      <nav className="flex justify-center gap-2 px-4 pb-8 flex-wrap">
-        {screens.map((screen) => (
-          <button
-            key={screen.id}
-            onClick={() => setActiveScreen(screen.id)}
-            className={cn(
-              "px-4 py-2 rounded-full text-sm font-medium transition-all",
-              activeScreen === screen.id
-                ? "bg-primary text-primary-foreground shadow-md"
-                : "bg-white text-foreground hover:bg-white/80 shadow-sm"
-            )}
-          >
-            {screen.name}
-          </button>
-        ))}
-      </nav>
+      {/* Screen Navigation + iPhone Preview */}
+      <div className="flex flex-col items-center pb-16 gap-6">
+        <div className="flex justify-center gap-2 px-4 flex-wrap">
+          {screens.map((screen) => (
+            <div
+              key={screen.id}
+              onClick={() => setActiveScreen(screen.id)}
+              className={cn(
+                "px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer select-none",
+                activeScreen === screen.id
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "bg-white text-foreground hover:bg-white/80 shadow-sm"
+              )}
+            >
+              {screen.name}
+            </div>
+          ))}
+        </div>
 
-      {/* iPhone Preview */}
-      <div className="flex justify-center pb-16">
         <IPhoneFrame className="transform scale-[0.85] md:scale-100 origin-top">
           <ActiveComponent />
         </IPhoneFrame>
@@ -66,8 +67,7 @@ export default function Page() {
               key={screen.id}
               onClick={() => setActiveScreen(screen.id)}
               className={cn(
-                "flex flex-col items-center gap-3 cursor-pointer group",
-                activeScreen === screen.id && "opacity-100"
+                "flex flex-col items-center gap-3 cursor-pointer group select-none",
               )}
             >
               <div className={cn(
