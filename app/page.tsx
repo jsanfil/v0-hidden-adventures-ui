@@ -60,30 +60,30 @@ export default function Page() {
       {/* All Screens Grid */}
       <section className="px-6 pb-20">
         <h2 className="text-2xl font-serif text-foreground text-center mb-8">All Screens</h2>
-        <div className="flex flex-wrap justify-center gap-8">
-          {screens.map((screen) => {
-            const ScreenComponent = screen.component
-            return (
-              <div key={screen.id} className="flex flex-col items-center">
-                {/* Wrapper with pointer-events-none on inner content, overlay captures clicks */}
-                <div
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Preview ${screen.name}`}
-                  onClick={() => setActiveScreen(screen.id)}
-                  onKeyDown={(e) => e.key === "Enter" && setActiveScreen(screen.id)}
-                  className="relative transform scale-[0.4] origin-top transition-transform hover:scale-[0.42] cursor-pointer"
-                >
-                  <div className="pointer-events-none select-none">
-                    <IPhoneFrame>
-                      <ScreenComponent />
-                    </IPhoneFrame>
-                  </div>
+        <div className="flex flex-wrap justify-center gap-6">
+          {screens.map((screen) => (
+            <div
+              key={screen.id}
+              onClick={() => setActiveScreen(screen.id)}
+              className={cn(
+                "flex flex-col items-center gap-3 cursor-pointer group",
+                activeScreen === screen.id && "opacity-100"
+              )}
+            >
+              <div className={cn(
+                "w-28 h-48 rounded-2xl border-2 transition-all overflow-hidden shadow-md group-hover:shadow-lg group-hover:scale-105",
+                activeScreen === screen.id ? "border-primary" : "border-border"
+              )}>
+                <div className="w-full h-full bg-gradient-to-br from-secondary to-muted flex items-center justify-center">
+                  <span className="text-3xl font-serif text-muted-foreground">{screen.name.charAt(0)}</span>
                 </div>
-                <p className="text-sm font-medium text-foreground -mt-[280px]">{screen.name}</p>
               </div>
-            )
-          })}
+              <p className={cn(
+                "text-xs font-medium text-center",
+                activeScreen === screen.id ? "text-primary" : "text-muted-foreground"
+              )}>{screen.name}</p>
+            </div>
+          ))}
         </div>
       </section>
 
