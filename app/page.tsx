@@ -66,18 +66,19 @@ export default function Page() {
             return (
               <div key={screen.id} className="flex flex-col items-center">
                 {/* Wrapper with pointer-events-none on inner content, overlay captures clicks */}
-                <div className="relative transform scale-[0.4] origin-top transition-transform hover:scale-[0.42]">
-                  <div className="pointer-events-none">
+                <div
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Preview ${screen.name}`}
+                  onClick={() => setActiveScreen(screen.id)}
+                  onKeyDown={(e) => e.key === "Enter" && setActiveScreen(screen.id)}
+                  className="relative transform scale-[0.4] origin-top transition-transform hover:scale-[0.42] cursor-pointer"
+                >
+                  <div className="pointer-events-none select-none">
                     <IPhoneFrame>
                       <ScreenComponent />
                     </IPhoneFrame>
                   </div>
-                  {/* Transparent click overlay to avoid nested button violations */}
-                  <button
-                    aria-label={`Preview ${screen.name}`}
-                    onClick={() => setActiveScreen(screen.id)}
-                    className="absolute inset-0 cursor-pointer"
-                  />
                 </div>
                 <p className="text-sm font-medium text-foreground -mt-[280px]">{screen.name}</p>
               </div>

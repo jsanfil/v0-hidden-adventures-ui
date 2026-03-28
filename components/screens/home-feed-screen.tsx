@@ -1,8 +1,15 @@
 "use client"
 
 import Image from "next/image"
-import { Home, Map, Bookmark, User, Search, Bell, MapPin, Heart, Star, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Navigation } from "lucide-react"
+import { Home, Map, Bookmark, User, Search, Bell, MapPin, Heart, Star, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Navigation, Globe, Users, Lock } from "lucide-react"
 import { useState } from "react"
+
+const visibilityFilters = [
+  { label: "All", icon: null },
+  { label: "Public", icon: Globe },
+  { label: "Connections", icon: Users },
+  { label: "Private", icon: Lock },
+]
 
 const categories = [
   { label: "Viewpoints", icon: Mountain },
@@ -68,6 +75,7 @@ const adventures = [
 
 export function HomeFeedScreen() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const [activeVisibility, setActiveVisibility] = useState("All")
 
   return (
     <div className="relative w-full h-full bg-background flex flex-col">
@@ -91,7 +99,30 @@ export function HomeFeedScreen() {
         </div>
       </div>
 
-      {/* Filter Carousel */}
+      {/* Visibility Segmented Control */}
+      <div className="px-5 pb-3 flex-shrink-0">
+        <div className="flex bg-secondary rounded-xl p-1 gap-0.5">
+          {visibilityFilters.map(({ label, icon: Icon }) => {
+            const isActive = activeVisibility === label
+            return (
+              <button
+                key={label}
+                onClick={() => setActiveVisibility(label)}
+                className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  isActive
+                    ? "bg-card text-foreground shadow-sm"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {Icon && <Icon className="w-3 h-3 flex-shrink-0" />}
+                {label}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Category Filter Carousel */}
       <div className="flex-shrink-0 overflow-x-auto scrollbar-hide px-5 pb-3">
         <div className="flex gap-2 w-max">
           {categories.map(({ label, icon: Icon }) => {
