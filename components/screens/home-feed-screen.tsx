@@ -1,7 +1,19 @@
 "use client"
 
 import Image from "next/image"
-import { Home, Map, Bookmark, User, Search, Bell, MapPin, Heart, Star } from "lucide-react"
+import { Home, Map, Bookmark, User, Search, Bell, MapPin, Heart, Star, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Navigation } from "lucide-react"
+import { useState } from "react"
+
+const categories = [
+  { label: "Viewpoints", icon: Mountain },
+  { label: "Trails", icon: Footprints },
+  { label: "Water Spots", icon: Waves },
+  { label: "Food & Drink", icon: UtensilsCrossed },
+  { label: "Abandoned Places", icon: Building2 },
+  { label: "Caves", icon: Gem },
+  { label: "Nature Escapes", icon: Leaf },
+  { label: "Roadside Stops", icon: Navigation },
+]
 
 const adventures = [
   {
@@ -55,6 +67,8 @@ const adventures = [
 ]
 
 export function HomeFeedScreen() {
+  const [activeCategory, setActiveCategory] = useState<string | null>(null)
+
   return (
     <div className="relative w-full h-full bg-background flex flex-col">
       {/* Status Bar Space */}
@@ -74,6 +88,29 @@ export function HomeFeedScreen() {
             <Bell className="w-5 h-5 text-foreground" />
             <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary" />
           </button>
+        </div>
+      </div>
+
+      {/* Filter Carousel */}
+      <div className="flex-shrink-0 overflow-x-auto scrollbar-hide px-5 pb-3">
+        <div className="flex gap-2 w-max">
+          {categories.map(({ label, icon: Icon }) => {
+            const isActive = activeCategory === label
+            return (
+              <button
+                key={label}
+                onClick={() => setActiveCategory(isActive ? null : label)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 ${
+                  isActive
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card text-foreground border-border"
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                {label}
+              </button>
+            )
+          })}
         </div>
       </div>
 
