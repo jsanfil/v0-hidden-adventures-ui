@@ -146,7 +146,7 @@ export function HomeFeedScreen() {
       </div>
 
       {/* Feed */}
-      <div className="flex-1 overflow-y-auto pb-24">
+      <div className="flex-1 overflow-y-auto pb-32">
         <div className="flex flex-col gap-4 px-5 pt-2">
           {adventures.map((adventure) => (
             <div key={adventure.title} className="relative rounded-2xl overflow-hidden bg-card shadow-sm">
@@ -200,7 +200,7 @@ export function HomeFeedScreen() {
       </div>
 
       {/* Tab Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border">
+      <div className="absolute bottom-0 left-0 right-0 bg-card border-t border-border">
         <div className="flex items-center justify-around py-2 pb-7">
           <button className="flex flex-col items-center gap-0.5 px-4 py-1.5">
             <Home className="w-6 h-6 text-primary" fill="currentColor" />
