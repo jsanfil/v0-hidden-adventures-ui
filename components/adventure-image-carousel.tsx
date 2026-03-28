@@ -61,9 +61,11 @@ export function AdventureImageCarousel({
     </div>
   )
 
+  const isFullHeight = aspectRatio === "h-full"
+
   return (
-    <div className={`flex flex-col ${className}`}>
-      <div className={`relative overflow-hidden cursor-pointer ${aspectRatio !== "h-full" ? aspectRatio : "h-full"}`} onClick={handleTap}>
+    <div className={`${isFullHeight ? "h-full" : "flex flex-col"} ${className}`}>
+      <div className={`relative overflow-hidden cursor-pointer ${isFullHeight ? "h-full" : aspectRatio}`} onClick={handleTap}>
         <Image
           src={images[activeIndex]}
           alt={`${alt} ${activeIndex + 1}`}

@@ -54,29 +54,21 @@ export default function Page() {
         ))}
       </div>
 
-      {/* iPhone Preview — live component, isolated */}
-      <div className="flex justify-center pb-16">
-        <IPhoneFrame className="transform scale-[0.85] md:scale-100 origin-top">
-          <ActiveComponent />
-        </IPhoneFrame>
-      </div>
-
       {/* All Screens Grid — static thumbnails only, no live components */}
-      <section className="px-6 pb-20">
-        <h2 className="text-2xl font-serif text-foreground text-center mb-8">All Screens</h2>
-        <div className="flex flex-wrap justify-center gap-6">
+      <section className="px-6 pb-12">
+        <div className="flex flex-wrap justify-center gap-4">
           {screens.map((screen) => (
             <div
               key={screen.id}
               onClick={() => setActiveScreen(screen.id)}
-              className="flex flex-col items-center gap-3 cursor-pointer group select-none"
+              className="flex flex-col items-center gap-2 cursor-pointer group select-none"
             >
               <div className={cn(
-                "w-28 h-48 rounded-2xl border-2 transition-all overflow-hidden shadow-md group-hover:shadow-lg group-hover:scale-105",
+                "w-24 h-40 rounded-2xl border-2 transition-all overflow-hidden shadow-md group-hover:shadow-lg group-hover:scale-105",
                 activeScreen === screen.id ? "border-primary" : "border-border"
               )}>
                 <div className={cn("w-full h-full bg-gradient-to-br flex flex-col items-center justify-center gap-2 p-3", screen.color)}>
-                  <span className="text-4xl font-serif text-white/90">{screen.name.charAt(0)}</span>
+                  <span className="text-3xl font-serif text-white/90">{screen.name.charAt(0)}</span>
                   <span className="text-[10px] font-medium text-white/70 text-center leading-tight">{screen.name}</span>
                 </div>
               </div>
@@ -88,6 +80,13 @@ export default function Page() {
           ))}
         </div>
       </section>
+
+      {/* iPhone Preview — live component, isolated */}
+      <div className="flex justify-center pb-20">
+        <IPhoneFrame className="transform scale-[0.85] md:scale-100 origin-top">
+          <ActiveComponent />
+        </IPhoneFrame>
+      </div>
 
       {/* Design System Footer */}
       <footer className="px-6 pb-16">

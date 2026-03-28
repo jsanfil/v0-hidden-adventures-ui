@@ -1,7 +1,7 @@
 "use client"
 
-import Image from "next/image"
 import { Home, Map, Bookmark, User, Search, ChevronDown, MapPin, Star, Navigation, Globe, Users, Lock, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf } from "lucide-react"
+import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 import { useState } from "react"
 
 const visibilityFilters = [
@@ -45,7 +45,7 @@ function MapPinMarker({ top, left, active }: MapPinMarkerProps) {
 }
 
 interface BottomSheetCardProps {
-  image: string
+  images: string[]
   title: string
   location: string
   distance: string
@@ -53,12 +53,17 @@ interface BottomSheetCardProps {
   category: string
 }
 
-function BottomSheetCard({ image, title, location, distance, rating, category }: BottomSheetCardProps) {
+function BottomSheetCard({ images, title, location, distance, rating, category }: BottomSheetCardProps) {
   return (
     <div className="flex-shrink-0 w-64 bg-card rounded-2xl overflow-hidden shadow-sm border border-border/50">
-      <div className="relative h-32">
-        <Image src={image} alt={title} fill className="object-cover" />
-        <div className="absolute top-2 left-2">
+      <div className="relative">
+        <AdventureImageCarousel
+          images={images}
+          alt={title}
+          aspectRatio="aspect-[16/9]"
+          dotsPosition="inside"
+        />
+        <div className="absolute top-2 left-2 pointer-events-none z-10">
           <span className="px-2 py-0.5 rounded-full bg-white/90 backdrop-blur-sm text-xs font-medium text-foreground">
             {category}
           </span>
@@ -190,9 +195,9 @@ export function MapExploreScreen() {
           <button className="text-sm text-primary font-medium">List view</button>
         </div>
         <div className="flex gap-3 overflow-x-auto px-5 pb-6 scrollbar-hide">
-          <BottomSheetCard image="/images/swimming-hole.jpg" title="Blue Pool" location="Willamette NF" distance="2.4 mi" rating={4.8} category="Swimming" />
-          <BottomSheetCard image="/images/trail-forest.jpg" title="Opal Creek Trail" location="Opal Creek Wilderness" distance="4.1 mi" rating={4.9} category="Trail" />
-          <BottomSheetCard image="/images/scenic-overlook.jpg" title="Tom Dick & Harry" location="Mt. Hood" distance="8.2 mi" rating={4.7} category="Viewpoint" />
+          <BottomSheetCard images={["/images/swimming-hole.jpg", "/images/hidden-canyon.jpg", "/images/hero-mountain.jpg"]} title="Blue Pool" location="Willamette NF" distance="2.4 mi" rating={4.8} category="Swimming" />
+          <BottomSheetCard images={["/images/trail-forest.jpg", "/images/coastal-path.jpg"]} title="Opal Creek Trail" location="Opal Creek Wilderness" distance="4.1 mi" rating={4.9} category="Trail" />
+          <BottomSheetCard images={["/images/scenic-overlook.jpg"]} title="Tom Dick & Harry" location="Mt. Hood" distance="8.2 mi" rating={4.7} category="Viewpoint" />
         </div>
         <div className="border-t border-border">
           <div className="flex items-center justify-around py-2 pb-7">
