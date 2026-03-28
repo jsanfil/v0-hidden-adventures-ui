@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Map, Bookmark, User, Search, ChevronDown, MapPin, Star, Navigation, Globe, Users, Lock, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf } from "lucide-react"
+import { Home, Map, Bookmark, User, Search, ChevronDown, MapPin, Star, Navigation, Globe, Users, Lock, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Plus } from "lucide-react"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 import { useState } from "react"
 
@@ -200,20 +200,26 @@ export function MapExploreScreen() {
           <BottomSheetCard images={["/images/scenic-overlook.jpg"]} title="Tom Dick & Harry" location="Mt. Hood" distance="8.2 mi" rating={4.7} category="Viewpoint" />
         </div>
         <div className="border-t border-border">
-          <div className="flex items-center justify-around py-2 pb-7">
-            <button className="flex flex-col items-center gap-0.5 px-4 py-1.5">
+          <div className="flex items-end justify-around pt-2 pb-7 px-2">
+            <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
               <Home className="w-6 h-6 text-muted-foreground" />
               <span className="text-[10px] font-medium text-muted-foreground">Home</span>
             </button>
-            <button className="flex flex-col items-center gap-0.5 px-4 py-1.5">
+            <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
               <Map className="w-6 h-6 text-primary" fill="currentColor" />
               <span className="text-[10px] font-medium text-primary">Explore</span>
             </button>
-            <button className="flex flex-col items-center gap-0.5 px-4 py-1.5">
+            <div className="flex flex-col items-center gap-0.5 px-3 -mt-5">
+              <button className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg">
+                <Plus className="w-6 h-6 text-primary-foreground" strokeWidth={2.5} />
+              </button>
+              <span className="text-[10px] font-medium text-muted-foreground mt-0.5">Post</span>
+            </div>
+            <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
               <Bookmark className="w-6 h-6 text-muted-foreground" />
               <span className="text-[10px] font-medium text-muted-foreground">Saved</span>
             </button>
-            <button className="flex flex-col items-center gap-0.5 px-4 py-1.5">
+            <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
               <User className="w-6 h-6 text-muted-foreground" />
               <span className="text-[10px] font-medium text-muted-foreground">Profile</span>
             </button>

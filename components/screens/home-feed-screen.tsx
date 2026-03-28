@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Map, Bookmark, User, Search, Bell, MapPin, Heart, Star, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Navigation, Globe, Users, Lock } from "lucide-react"
+import { Home, Map, Bookmark, User, Search, Bell, MapPin, Heart, Star, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Navigation, Globe, Users, Lock, Plus } from "lucide-react"
 import { useState } from "react"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 
@@ -146,7 +146,7 @@ export function HomeFeedScreen() {
       </div>
 
       {/* Feed */}
-      <div className="flex-1 overflow-y-auto pb-24">
+      <div className="flex-1 overflow-y-auto pb-32">
         <div className="flex flex-col gap-4 px-5 pt-2">
           {adventures.map((adventure) => (
             <div key={adventure.title} className="relative rounded-2xl overflow-hidden bg-card shadow-sm">
@@ -200,21 +200,28 @@ export function HomeFeedScreen() {
       </div>
 
       {/* Tab Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border">
-        <div className="flex items-center justify-around py-2 pb-7">
-          <button className="flex flex-col items-center gap-0.5 px-4 py-1.5">
+      <div className="absolute bottom-0 left-0 right-0 bg-card border-t border-border">
+        <div className="flex items-end justify-around pt-2 pb-7 px-2">
+          <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
             <Home className="w-6 h-6 text-primary" fill="currentColor" />
             <span className="text-[10px] font-medium text-primary">Home</span>
           </button>
-          <button className="flex flex-col items-center gap-0.5 px-4 py-1.5">
+          <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
             <Map className="w-6 h-6 text-muted-foreground" />
             <span className="text-[10px] font-medium text-muted-foreground">Explore</span>
           </button>
-          <button className="flex flex-col items-center gap-0.5 px-4 py-1.5">
+          {/* Post button — raised above tab bar */}
+          <div className="flex flex-col items-center gap-0.5 px-3 -mt-5">
+            <button className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg">
+              <Plus className="w-6 h-6 text-primary-foreground" strokeWidth={2.5} />
+            </button>
+            <span className="text-[10px] font-medium text-muted-foreground mt-0.5">Post</span>
+          </div>
+          <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
             <Bookmark className="w-6 h-6 text-muted-foreground" />
             <span className="text-[10px] font-medium text-muted-foreground">Saved</span>
           </button>
-          <button className="flex flex-col items-center gap-0.5 px-4 py-1.5">
+          <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
             <User className="w-6 h-6 text-muted-foreground" />
             <span className="text-[10px] font-medium text-muted-foreground">Profile</span>
           </button>
