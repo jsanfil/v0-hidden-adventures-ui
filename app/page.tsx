@@ -24,7 +24,8 @@ const screens = [
 export default function Page() {
   const [activeScreen, setActiveScreen] = useState("welcome")
 
-  const ActiveComponent = screens.find(s => s.id === activeScreen)?.component ?? WelcomeScreen
+  const activeScreenData = screens.find(s => s.id === activeScreen)
+  const ActiveComponent = activeScreenData?.component ?? WelcomeScreen
 
   return (
     <main className="min-h-screen bg-[#f5f3ef]">

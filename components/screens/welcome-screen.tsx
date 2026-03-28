@@ -38,12 +38,12 @@ export function WelcomeScreen() {
           </div>
           
           {/* CTAs */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <button className="w-full py-4 text-base font-medium rounded-2xl bg-white text-foreground hover:bg-white/95 shadow-lg transition-colors">
-              Create Account
+              Get Started
             </button>
-            <button className="w-full py-4 text-base font-medium rounded-2xl text-white hover:bg-white/10 border border-white/30 transition-colors">
-              Sign In
+            <button className="w-full py-3 text-sm font-medium text-white/70 hover:text-white transition-colors">
+              Already have an account? <span className="text-white font-semibold underline underline-offset-2">Sign In</span>
             </button>
           </div>
           
