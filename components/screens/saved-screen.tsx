@@ -1,39 +1,39 @@
 "use client"
 
-import Image from "next/image"
-import { Home, Map, Bookmark, User, MapPin, Star, ChevronRight, Mountain, Waves, Footprints, Navigation } from "lucide-react"
+import { Home, Map, Bookmark, User, Star, ChevronRight, Mountain, Waves, Footprints, Navigation } from "lucide-react"
 import { useState } from "react"
+import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 
 const regions = [
   {
     name: "Columbia River Gorge",
     state: "Oregon",
     count: 3,
-    coverImage: "/images/hero-mountain.jpg",
+    coverImages: ["/images/hero-mountain.jpg", "/images/hidden-canyon.jpg"],
     adventures: [
-      { title: "Eagle Creek Trail to Tunnel Falls", category: "Waterfall Hike", rating: 4.9, image: "/images/hero-mountain.jpg", icon: Footprints },
-      { title: "Oneonta Gorge Slot Canyon", category: "Canyon", rating: 4.9, image: "/images/hidden-canyon.jpg", icon: Mountain },
-      { title: "Crown Point Vista House", category: "Viewpoint", rating: 4.7, image: "/images/scenic-overlook.jpg", icon: Navigation },
+      { title: "Eagle Creek Trail to Tunnel Falls", category: "Waterfall Hike", rating: 4.9, images: ["/images/hero-mountain.jpg", "/images/scenic-overlook.jpg", "/images/trail-forest.jpg"], icon: Footprints },
+      { title: "Oneonta Gorge Slot Canyon", category: "Canyon", rating: 4.9, images: ["/images/hidden-canyon.jpg", "/images/swimming-hole.jpg"], icon: Mountain },
+      { title: "Crown Point Vista House", category: "Viewpoint", rating: 4.7, images: ["/images/scenic-overlook.jpg"], icon: Navigation },
     ],
   },
   {
     name: "Oregon Coast",
     state: "Oregon",
     count: 2,
-    coverImage: "/images/coastal-path.jpg",
+    coverImages: ["/images/coastal-path.jpg"],
     adventures: [
-      { title: "Sunset Cliffs at Cape Kiwanda", category: "Coastal Walk", rating: 4.7, image: "/images/coastal-path.jpg", icon: Waves },
-      { title: "Thor's Well at Cape Perpetua", category: "Natural Wonder", rating: 4.8, image: "/images/swimming-hole.jpg", icon: Waves },
+      { title: "Sunset Cliffs at Cape Kiwanda", category: "Coastal Walk", rating: 4.7, images: ["/images/coastal-path.jpg", "/images/hero-mountain.jpg"], icon: Waves },
+      { title: "Thor's Well at Cape Perpetua", category: "Natural Wonder", rating: 4.8, images: ["/images/swimming-hole.jpg"], icon: Waves },
     ],
   },
   {
     name: "Willamette National Forest",
     state: "Oregon",
     count: 2,
-    coverImage: "/images/trail-forest.jpg",
+    coverImages: ["/images/trail-forest.jpg", "/images/swimming-hole.jpg"],
     adventures: [
-      { title: "Opal Creek Ancient Forest", category: "Old Growth", rating: 4.8, image: "/images/trail-forest.jpg", icon: Footprints },
-      { title: "Blue Pool at Terwilliger Hot Springs", category: "Hidden Gem", rating: 4.8, image: "/images/swimming-hole.jpg", icon: Waves },
+      { title: "Opal Creek Ancient Forest", category: "Old Growth", rating: 4.8, images: ["/images/trail-forest.jpg", "/images/coastal-path.jpg"], icon: Footprints },
+      { title: "Blue Pool at Terwilliger Hot Springs", category: "Hidden Gem", rating: 4.8, images: ["/images/swimming-hole.jpg", "/images/hidden-canyon.jpg"], icon: Waves },
     ],
   },
 ]
@@ -59,13 +59,18 @@ export function SavedScreen() {
           return (
             <div key={region.name} className="rounded-2xl overflow-hidden bg-card shadow-sm border border-border">
               {/* Region Header — tap to expand */}
-              <button
+              <div
                 onClick={() => setExpanded(isOpen ? null : region.name)}
-                className="w-full flex items-center gap-3 p-3 text-left"
+                className="w-full flex items-center gap-3 p-3 text-left cursor-pointer"
               >
                 {/* Cover thumbnail */}
-                <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
-                  <Image src={region.coverImage} alt={region.name} fill className="object-cover" />
+                <div className="w-14 flex-shrink-0 rounded-xl overflow-hidden">
+                  <AdventureImageCarousel
+                    images={region.coverImages}
+                    alt={region.name}
+                    aspectRatio="aspect-square"
+                    dotsPosition="below"
+                  />
                 </div>
 
                 <div className="flex-1 min-w-0">
@@ -79,7 +84,7 @@ export function SavedScreen() {
                 <ChevronRight
                   className={`w-4 h-4 text-muted-foreground flex-shrink-0 transition-transform ${isOpen ? "rotate-90" : ""}`}
                 />
-              </button>
+              </div>
 
               {/* Expanded Adventure List */}
               {isOpen && (
@@ -88,8 +93,13 @@ export function SavedScreen() {
                     const Icon = adv.icon
                     return (
                       <div key={adv.title} className="flex items-center gap-3 px-3 py-2.5">
-                        <div className="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
-                          <Image src={adv.image} alt={adv.title} fill className="object-cover" />
+                        <div className="w-10 flex-shrink-0 rounded-lg overflow-hidden">
+                          <AdventureImageCarousel
+                            images={adv.images}
+                            alt={adv.title}
+                            aspectRatio="aspect-square"
+                            dotsPosition="below"
+                          />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium text-foreground leading-snug line-clamp-1">{adv.title}</p>

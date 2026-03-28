@@ -1,8 +1,8 @@
 "use client"
 
-import Image from "next/image"
 import { Home, Map, Bookmark, User, Search, Bell, MapPin, Heart, Star, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Navigation, Globe, Users, Lock } from "lucide-react"
 import { useState } from "react"
+import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 
 const visibilityFilters = [
   { label: "All", icon: null },
@@ -24,7 +24,7 @@ const categories = [
 
 const adventures = [
   {
-    image: "/images/hero-mountain.jpg",
+    images: ["/images/hero-mountain.jpg", "/images/scenic-overlook.jpg", "/images/trail-forest.jpg"],
     title: "Eagle Creek Trail to Tunnel Falls",
     location: "Columbia River Gorge, OR",
     category: "Waterfall Hike",
@@ -32,7 +32,7 @@ const adventures = [
     saves: 2847,
   },
   {
-    image: "/images/swimming-hole.jpg",
+    images: ["/images/swimming-hole.jpg", "/images/hidden-canyon.jpg"],
     title: "Blue Pool at Terwilliger Hot Springs",
     location: "Willamette National Forest, OR",
     category: "Hidden Gem",
@@ -40,7 +40,7 @@ const adventures = [
     saves: 1523,
   },
   {
-    image: "/images/scenic-overlook.jpg",
+    images: ["/images/scenic-overlook.jpg"],
     title: "Tom Dick & Harry Mountain",
     location: "Mt. Hood, OR",
     category: "Scenic View",
@@ -48,7 +48,7 @@ const adventures = [
     saves: 982,
   },
   {
-    image: "/images/coastal-path.jpg",
+    images: ["/images/coastal-path.jpg", "/images/hero-mountain.jpg"],
     title: "Sunset Cliffs at Cape Kiwanda",
     location: "Pacific City, OR",
     category: "Coastal Walk",
@@ -56,7 +56,7 @@ const adventures = [
     saves: 892,
   },
   {
-    image: "/images/hidden-canyon.jpg",
+    images: ["/images/hidden-canyon.jpg", "/images/swimming-hole.jpg", "/images/scenic-overlook.jpg"],
     title: "Oneonta Gorge Slot Canyon",
     location: "Columbia River Gorge, OR",
     category: "Canyon",
@@ -64,7 +64,7 @@ const adventures = [
     saves: 3104,
   },
   {
-    image: "/images/trail-forest.jpg",
+    images: ["/images/trail-forest.jpg", "/images/coastal-path.jpg"],
     title: "Opal Creek Ancient Forest",
     location: "Opal Creek Wilderness, OR",
     category: "Old Growth",
@@ -150,30 +150,29 @@ export function HomeFeedScreen() {
         <div className="flex flex-col gap-4 px-5 pt-2">
           {adventures.map((adventure) => (
             <div key={adventure.title} className="relative rounded-2xl overflow-hidden bg-card shadow-sm">
-              {/* Image */}
-              <div className="relative aspect-[4/3]">
-                <Image
-                  src={adventure.image}
+              <div className="relative">
+                <AdventureImageCarousel
+                  images={adventure.images}
                   alt={adventure.title}
-                  fill
-                  className="object-cover"
+                  aspectRatio="aspect-[4/3]"
+                  dotsPosition="inside"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent pointer-events-none" />
 
                 {/* Category */}
-                <div className="absolute top-3 left-3">
+                <div className="absolute top-3 left-3 pointer-events-none">
                   <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-xs font-medium text-foreground">
                     {adventure.category}
                   </span>
                 </div>
 
                 {/* Save button */}
-                <button className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center">
+                <button className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center z-10">
                   <Bookmark className="w-4 h-4 text-foreground" />
                 </button>
 
-                {/* Title & meta */}
-                <div className="absolute bottom-0 left-0 right-0 p-4">
+                {/* Title & meta — sits above the dots */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 pb-8 pointer-events-none">
                   <h3 className="font-semibold text-white text-base mb-1.5 leading-snug">
                     {adventure.title}
                   </h3>

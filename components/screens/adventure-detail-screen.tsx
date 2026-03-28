@@ -1,44 +1,43 @@
 "use client"
 
-import Image from "next/image"
 import { ChevronLeft, Share2, Bookmark, MapPin, Star, Clock, TrendingUp, Heart, MessageCircle, Navigation, ChevronRight } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
+
+const heroImages = [
+  "/images/swimming-hole.jpg",
+  "/images/hidden-canyon.jpg",
+  "/images/trail-forest.jpg",
+  "/images/hero-mountain.jpg",
+]
 
 export function AdventureDetailScreen() {
   return (
     <div className="relative w-full h-full bg-background flex flex-col">
-      {/* Hero Image */}
+      {/* Hero Image Carousel */}
       <div className="relative h-[320px] flex-shrink-0">
-        <Image
-          src="/images/swimming-hole.jpg"
+        <AdventureImageCarousel
+          images={heroImages}
           alt="Blue Pool"
-          fill
-          className="object-cover"
-          priority
+          className="h-full"
+          aspectRatio="h-full"
+          dotsPosition="inside"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
-        
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent pointer-events-none" />
+
         {/* Navigation */}
-        <div className="absolute top-0 left-0 right-0 pt-14 px-4 flex items-center justify-between">
-          <button className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
+        <div className="absolute top-0 left-0 right-0 pt-14 px-4 flex items-center justify-between pointer-events-none">
+          <button className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm pointer-events-auto">
             <ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
           <div className="flex items-center gap-2">
-            <button className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
+            <button className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm pointer-events-auto">
               <Share2 className="w-5 h-5 text-foreground" />
             </button>
-            <button className="w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-sm">
+            <button className="w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-sm pointer-events-auto">
               <Bookmark className="w-5 h-5 text-primary-foreground" fill="currentColor" />
             </button>
           </div>
-        </div>
-        
-        {/* Image Pagination Dots */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-white" />
-          <div className="w-2 h-2 rounded-full bg-white/50" />
-          <div className="w-2 h-2 rounded-full bg-white/50" />
-          <div className="w-2 h-2 rounded-full bg-white/50" />
         </div>
       </div>
       
