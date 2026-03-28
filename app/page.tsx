@@ -65,14 +65,17 @@ export default function Page() {
             const ScreenComponent = screen.component
             return (
               <div key={screen.id} className="flex flex-col items-center">
-                <button
+                <div
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setActiveScreen(screen.id)}
-                  className="transform scale-[0.4] origin-top hover:scale-[0.42] transition-transform"
+                  onKeyDown={(e) => e.key === "Enter" && setActiveScreen(screen.id)}
+                  className="transform scale-[0.4] origin-top hover:scale-[0.42] transition-transform cursor-pointer"
                 >
                   <IPhoneFrame>
                     <ScreenComponent />
                   </IPhoneFrame>
-                </button>
+                </div>
                 <p className="text-sm font-medium text-foreground -mt-[280px]">{screen.name}</p>
               </div>
             )
