@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Map, Bookmark, User, Search, MapPin, Star, Navigation, Globe, Users, Lock, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Plus, X, ChevronRight, Locate } from "lucide-react"
+import { Home, Map, Bookmark, User, Search, MapPin, Star, Navigation, Globe, Users, Lock, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Plus, X, ChevronRight, Locate, SlidersHorizontal, Check } from "lucide-react"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 import { useState, useRef } from "react"
 import type { LucideIcon } from "lucide-react"
@@ -202,8 +202,8 @@ export function MapExploreScreen() {
   const [selectedAdventure, setSelectedAdventure] = useState<string | null>(null)
   const [sheetState, setSheetState] = useState<SheetState>("peek")
   const [searchQuery, setSearchQuery] = useState("")
-  const [currentLocation, setCurrentLocation] = useState("Portland, OR")
   const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const [filterOpen, setFilterOpen] = useState(false)
   const dragStartY = useRef(0)
   const sheetRef = useRef<HTMLDivElement>(null)
 
@@ -224,9 +224,8 @@ export function MapExploreScreen() {
   }
 
   const handleMapTap = () => {
-    if (selectedAdventure) {
-      setSelectedAdventure(null)
-    }
+    if (selectedAdventure) setSelectedAdventure(null)
+    if (filterOpen) setFilterOpen(false)
   }
 
   const handleDragStart = (e: React.TouchEvent | React.MouseEvent) => {
@@ -301,72 +300,66 @@ export function MapExploreScreen() {
       {/* Status Bar Space */}
       <div className="h-12" />
 
-      {/* Search Bar - Floating over map */}
+      {/* Search Bar + Filter Button - Floating over map */}
       <div className="absolute top-12 left-0 right-0 px-4 z-20">
-        <div className={`flex items-center gap-2 bg-card rounded-2xl px-4 py-3 shadow-lg transition-all ${isSearchFocused ? "ring-2 ring-primary" : ""}`}>
-          <Search className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-          <input
-            type="text"
-            placeholder="Search adventures..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onFocus={() => setIsSearchFocused(true)}
-            onBlur={() => setIsSearchFocused(false)}
-            className="flex-1 bg-transparent text-base text-foreground placeholder:text-muted-foreground outline-none min-w-0"
-          />
-          <div className="h-6 w-px bg-border flex-shrink-0" />
-          <button className="flex items-center gap-1 text-primary text-sm font-medium flex-shrink-0 whitespace-nowrap">
-            <MapPin className="w-4 h-4" />
-            <span className="max-w-[80px] truncate">{currentLocation}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Filter Controls - Below search */}
-      <div className="absolute top-28 left-0 right-0 z-10">
-        {/* Visibility Segmented Control */}
-        <div className="px-4 mb-2">
-          <div className="flex bg-card/95 backdrop-blur-sm rounded-xl p-1 gap-0.5 shadow-md">
-            {visibilityFilters.map(({ label, icon: Icon }) => {
-              const isActive = activeVisibility === label
-              return (
-                <button
-                  key={label}
-                  onClick={() => setActiveVisibility(label)}
-                  className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  {Icon && <Icon className="w-3 h-3 flex-shrink-0" />}
-                  {label}
-                </button>
-              )
-            })}
+        <div className="flex items-center gap-2">
+          {/* Search input */}
+          <div className={`flex-1 flex items-center gap-2 bg-card rounded-2xl px-4 py-3 shadow-lg transition-all ${isSearchFocused ? "ring-2 ring-primary" : ""}`}>
+            <Search className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+            <input
+              type="text"
+              placeholder="Search adventures or places..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
+              className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none min-w-0"
+            />
+            {searchQuery.length > 0 && (
+              <button onClick={() => setSearchQuery("")} className="flex-shrink-0">
+                <X className="w-4 h-4 text-muted-foreground" />
+              </button>
+            )}
           </div>
-        </div>
 
-        {/* Category Filter Carousel */}
-        <div className="overflow-x-auto scrollbar-hide px-4">
-          <div className="flex gap-2 w-max">
-            {categories.map(({ label, icon: Icon }) => {
-              const isActive = activeCategory === label
-              return (
-                <button
-                  key={label}
-                  onClick={() => setActiveCategory(isActive ? null : label)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 shadow-sm ${
-                    isActive
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-card text-foreground border-border"
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-                  {label}
-                </button>
-              )
-            })}
+          {/* Filter button */}
+          <div className="relative">
+            <button
+              onClick={() => setFilterOpen((v) => !v)}
+              className={`w-11 h-11 rounded-2xl shadow-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+                filterOpen || activeVisibility !== "All"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-card text-foreground"
+              }`}
+            >
+              <SlidersHorizontal className="w-5 h-5" />
+            </button>
+
+            {/* Visibility popover */}
+            {filterOpen && (
+              <div className="absolute top-13 right-0 mt-2 bg-card rounded-2xl shadow-xl border border-border/50 overflow-hidden w-52 z-30">
+                <div className="px-4 pt-3 pb-1">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Show adventures</p>
+                </div>
+                {visibilityFilters.map(({ label, icon: Icon }) => {
+                  const isActive = activeVisibility === label
+                  return (
+                    <button
+                      key={label}
+                      onClick={() => { setActiveVisibility(label); setFilterOpen(false) }}
+                      className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                        isActive ? "text-primary font-medium" : "text-foreground"
+                      }`}
+                    >
+                      {Icon ? <Icon className="w-4 h-4 flex-shrink-0" /> : <Globe className="w-4 h-4 flex-shrink-0" />}
+                      {label}
+                      {isActive && <Check className="w-4 h-4 ml-auto" />}
+                    </button>
+                  )
+                })}
+                <div className="h-2" />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -401,14 +394,42 @@ export function MapExploreScreen() {
         </div>
         
         {/* Sheet Header */}
-        <div className="px-5 pb-3 flex items-center justify-between">
+        <div className="px-5 pb-2 flex items-center justify-between">
           <div>
             <h2 className="text-base font-semibold text-foreground">Nearby Adventures</h2>
-            <p className="text-sm text-muted-foreground">{filteredAdventures.length} places within 25 miles</p>
+            <p className="text-xs text-muted-foreground">{filteredAdventures.length} places within 25 miles</p>
           </div>
-          <button className="text-sm text-primary font-medium">List view</button>
+          <button
+            onClick={() => setSheetState(sheetState === "expanded" ? "peek" : "expanded")}
+            className="text-sm text-primary font-medium"
+          >
+            {sheetState === "expanded" ? "Map view" : "List view"}
+          </button>
         </div>
-        
+
+        {/* Category Filter Pills - inside the sheet */}
+        <div className="overflow-x-auto scrollbar-hide px-5 pb-3">
+          <div className="flex gap-2 w-max">
+            {categories.map(({ label, icon: Icon }) => {
+              const isActive = activeCategory === label
+              return (
+                <button
+                  key={label}
+                  onClick={() => setActiveCategory(isActive ? null : label)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 ${
+                    isActive
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-secondary text-foreground border-border"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                  {label}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
         {/* Adventure Cards - Horizontal scroll in peek, vertical in expanded */}
         {sheetState === "expanded" ? (
           <div className="flex-1 overflow-y-auto px-5 pb-24">
