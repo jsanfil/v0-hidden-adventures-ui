@@ -1,8 +1,9 @@
 "use client"
 
-import { Home, Map, Bookmark, User, Search, ChevronDown, MapPin, Star, Navigation, Globe, Users, Lock, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Plus } from "lucide-react"
+import { Home, Map, Bookmark, User, Search, MapPin, Star, Navigation, Globe, Users, Lock, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Plus, X, ChevronRight, Locate } from "lucide-react"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
-import { useState } from "react"
+import { useState, useRef } from "react"
+import type { LucideIcon } from "lucide-react"
 
 const visibilityFilters = [
   { label: "All", icon: null },
@@ -11,7 +12,7 @@ const visibilityFilters = [
   { label: "Private", icon: Lock },
 ]
 
-const categories = [
+const categories: { label: string; icon: LucideIcon }[] = [
   { label: "Viewpoints", icon: Mountain },
   { label: "Trails", icon: Footprints },
   { label: "Water Spots", icon: Waves },
@@ -22,184 +23,456 @@ const categories = [
   { label: "Roadside Stops", icon: Navigation },
 ]
 
+// Adventure data with positions for the map
+const adventures = [
+  {
+    id: "blue-pool",
+    title: "Blue Pool",
+    location: "Willamette NF",
+    distance: "2.4 mi",
+    rating: 4.8,
+    category: "Water Spots",
+    categoryIcon: Waves,
+    images: ["/images/swimming-hole.jpg", "/images/hidden-canyon.jpg", "/images/hero-mountain.jpg"],
+    top: "38%",
+    left: "42%",
+  },
+  {
+    id: "opal-creek",
+    title: "Opal Creek Trail",
+    location: "Opal Creek Wilderness",
+    distance: "4.1 mi",
+    rating: 4.9,
+    category: "Trails",
+    categoryIcon: Footprints,
+    images: ["/images/trail-forest.jpg", "/images/coastal-path.jpg"],
+    top: "28%",
+    left: "68%",
+  },
+  {
+    id: "tom-dick-harry",
+    title: "Tom Dick & Harry",
+    location: "Mt. Hood",
+    distance: "8.2 mi",
+    rating: 4.7,
+    category: "Viewpoints",
+    categoryIcon: Mountain,
+    images: ["/images/scenic-overlook.jpg"],
+    top: "22%",
+    left: "25%",
+  },
+  {
+    id: "oneonta-gorge",
+    title: "Oneonta Gorge",
+    location: "Columbia River Gorge",
+    distance: "12.5 mi",
+    rating: 4.9,
+    category: "Caves",
+    categoryIcon: Gem,
+    images: ["/images/hidden-canyon.jpg", "/images/swimming-hole.jpg"],
+    top: "52%",
+    left: "32%",
+  },
+  {
+    id: "multnomah-falls",
+    title: "Multnomah Falls",
+    location: "Columbia River Gorge",
+    distance: "14.2 mi",
+    rating: 4.8,
+    category: "Viewpoints",
+    categoryIcon: Mountain,
+    images: ["/images/hero-mountain.jpg", "/images/scenic-overlook.jpg"],
+    top: "45%",
+    left: "72%",
+  },
+  {
+    id: "forest-park",
+    title: "Forest Park Loop",
+    location: "Portland, OR",
+    distance: "1.2 mi",
+    rating: 4.5,
+    category: "Trails",
+    categoryIcon: Footprints,
+    images: ["/images/trail-forest.jpg"],
+    top: "62%",
+    left: "55%",
+  },
+]
+
 interface MapPinMarkerProps {
-  top: string
-  left: string
-  active?: boolean
+  adventure: typeof adventures[0]
+  isSelected: boolean
+  onSelect: () => void
 }
 
-function MapPinMarker({ top, left, active }: MapPinMarkerProps) {
+function MapPinMarker({ adventure, isSelected, onSelect }: MapPinMarkerProps) {
+  const Icon = adventure.categoryIcon
+  
   return (
-    <div
-      className="absolute -translate-x-1/2 -translate-y-1/2"
-      style={{ top, left }}
+    <button
+      onClick={onSelect}
+      className="absolute -translate-x-1/2 -translate-y-full cursor-pointer group"
+      style={{ top: adventure.top, left: adventure.left }}
     >
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center shadow-lg transition-transform ${active ? "bg-primary scale-110" : "bg-white"}`}>
-        <MapPin className={`w-4 h-4 ${active ? "text-primary-foreground" : "text-primary"}`} />
+      {/* Pin with icon and label */}
+      <div className={`flex flex-col items-center transition-all duration-200 ${isSelected ? "scale-110 -translate-y-1" : "group-hover:scale-105"}`}>
+        {/* Label */}
+        <div className={`mb-1 px-2 py-0.5 rounded-md text-[10px] font-medium whitespace-nowrap shadow-md transition-all ${
+          isSelected 
+            ? "bg-primary text-primary-foreground" 
+            : "bg-white text-foreground"
+        }`}>
+          {adventure.title}
+        </div>
+        {/* Pin body */}
+        <div className={`relative flex items-center justify-center w-9 h-9 rounded-full shadow-lg transition-colors ${
+          isSelected ? "bg-primary" : "bg-white"
+        }`}>
+          <Icon className={`w-4 h-4 ${isSelected ? "text-primary-foreground" : "text-primary"}`} />
+          {/* Pin point */}
+          <div className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent ${
+            isSelected ? "border-t-primary" : "border-t-white"
+          }`} />
+        </div>
       </div>
-      {active && (
-        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-primary rounded-full" />
-      )}
-    </div>
+    </button>
   )
 }
 
-interface BottomSheetCardProps {
-  images: string[]
-  title: string
-  location: string
-  distance: string
-  rating: number
-  category: string
+interface AdventurePreviewCardProps {
+  adventure: typeof adventures[0]
+  onClose: () => void
 }
 
-function BottomSheetCard({ images, title, location, distance, rating, category }: BottomSheetCardProps) {
+function AdventurePreviewCard({ adventure, onClose }: AdventurePreviewCardProps) {
   return (
-    <div className="flex-shrink-0 w-64 bg-card rounded-2xl overflow-hidden shadow-sm border border-border/50">
+    <div className="absolute bottom-32 left-4 right-4 bg-card rounded-2xl shadow-2xl overflow-hidden border border-border/50 animate-in slide-in-from-bottom-4 duration-200">
       <div className="relative">
         <AdventureImageCarousel
-          images={images}
-          alt={title}
+          images={adventure.images}
+          alt={adventure.title}
           aspectRatio="aspect-[16/9]"
           dotsPosition="inside"
         />
+        {/* Close button */}
+        <button 
+          onClick={(e) => { e.stopPropagation(); onClose(); }}
+          className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center z-10"
+        >
+          <X className="w-4 h-4 text-white" />
+        </button>
+        {/* Category badge */}
         <div className="absolute top-2 left-2 pointer-events-none z-10">
           <span className="px-2 py-0.5 rounded-full bg-white/90 backdrop-blur-sm text-xs font-medium text-foreground">
-            {category}
+            {adventure.category}
           </span>
         </div>
       </div>
-      <div className="p-3">
-        <h3 className="font-semibold text-sm text-foreground line-clamp-1 mb-1">{title}</h3>
+      <div className="p-4">
+        <div className="flex items-start justify-between mb-2">
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-base text-foreground line-clamp-1">{adventure.title}</h3>
+            <div className="flex items-center gap-1 text-muted-foreground text-sm mt-0.5">
+              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="line-clamp-1">{adventure.location}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 text-amber-500 flex-shrink-0 ml-2">
+            <Star className="w-4 h-4 fill-current" />
+            <span className="font-semibold text-sm">{adventure.rating}</span>
+          </div>
+        </div>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1 text-muted-foreground text-xs">
-            <MapPin className="w-3 h-3" />
-            <span>{distance}</span>
-          </div>
-          <div className="flex items-center gap-1 text-muted-foreground text-xs">
-            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-            <span>{rating}</span>
-          </div>
+          <span className="text-sm text-muted-foreground">{adventure.distance} away</span>
+          <button className="flex items-center gap-1 px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium">
+            View Details
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </div>
   )
 }
+
+type SheetState = "collapsed" | "peek" | "expanded"
 
 export function MapExploreScreen() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [activeVisibility, setActiveVisibility] = useState("All")
+  const [selectedAdventure, setSelectedAdventure] = useState<string | null>(null)
+  const [sheetState, setSheetState] = useState<SheetState>("peek")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [currentLocation, setCurrentLocation] = useState("Portland, OR")
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const dragStartY = useRef(0)
+  const sheetRef = useRef<HTMLDivElement>(null)
+
+  const selectedAdventureData = adventures.find(a => a.id === selectedAdventure)
+  
+  // Filter adventures by category
+  const filteredAdventures = activeCategory 
+    ? adventures.filter(a => a.category === activeCategory)
+    : adventures
+
+  const handlePinSelect = (adventureId: string) => {
+    if (selectedAdventure === adventureId) {
+      setSelectedAdventure(null)
+    } else {
+      setSelectedAdventure(adventureId)
+      setSheetState("collapsed")
+    }
+  }
+
+  const handleMapTap = () => {
+    if (selectedAdventure) {
+      setSelectedAdventure(null)
+    }
+  }
+
+  const handleDragStart = (e: React.TouchEvent | React.MouseEvent) => {
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+    dragStartY.current = clientY
+  }
+
+  const handleDragEnd = (e: React.TouchEvent | React.MouseEvent) => {
+    const clientY = 'changedTouches' in e ? e.changedTouches[0].clientY : e.clientY
+    const delta = clientY - dragStartY.current
+    
+    if (delta < -50) {
+      // Dragged up
+      if (sheetState === "collapsed") setSheetState("peek")
+      else if (sheetState === "peek") setSheetState("expanded")
+    } else if (delta > 50) {
+      // Dragged down
+      if (sheetState === "expanded") setSheetState("peek")
+      else if (sheetState === "peek") setSheetState("collapsed")
+    }
+  }
+
+  const getSheetHeight = () => {
+    switch (sheetState) {
+      case "collapsed": return "h-[100px]"
+      case "peek": return "h-[280px]"
+      case "expanded": return "h-[70%]"
+    }
+  }
 
   return (
     <div className="relative w-full h-full bg-[#e8e4d9] overflow-hidden">
-      {/* Map Background */}
-      <div className="absolute inset-0">
+      {/* Map Background - Full screen with tap handler */}
+      <div className="absolute inset-0" onClick={handleMapTap}>
         <div className="absolute inset-0 bg-gradient-to-b from-[#d4e4d0] to-[#e8e4d9]" />
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 375 812" fill="none">
+          {/* Roads */}
           <path d="M0 400 Q100 350 200 380 T375 340" stroke="#fff" strokeWidth="8" fill="none" opacity="0.8" />
           <path d="M0 500 Q150 480 250 520 T375 490" stroke="#fff" strokeWidth="6" fill="none" opacity="0.8" />
           <path d="M180 0 Q200 200 160 400 T200 812" stroke="#fff" strokeWidth="4" fill="none" opacity="0.6" />
+          <path d="M50 200 Q120 250 100 350" stroke="#fff" strokeWidth="3" fill="none" opacity="0.5" />
+          <path d="M300 100 Q280 200 320 300" stroke="#fff" strokeWidth="3" fill="none" opacity="0.5" />
+          {/* Water features */}
           <ellipse cx="280" cy="280" rx="60" ry="40" fill="#a8ccd7" opacity="0.7" />
           <ellipse cx="80" cy="600" rx="45" ry="30" fill="#a8ccd7" opacity="0.7" />
+          <path d="M340 450 Q360 500 330 550" stroke="#a8ccd7" strokeWidth="12" fill="none" opacity="0.6" />
+          {/* Parks/Green areas */}
           <rect x="50" y="150" width="100" height="80" rx="20" fill="#b8d4a8" opacity="0.5" />
           <rect x="240" y="450" width="120" height="100" rx="25" fill="#b8d4a8" opacity="0.5" />
+          <circle cx="150" cy="500" r="40" fill="#b8d4a8" opacity="0.4" />
         </svg>
-        <MapPinMarker top="35%" left="45%" active />
-        <MapPinMarker top="25%" left="65%" />
-        <MapPinMarker top="50%" left="30%" />
-        <MapPinMarker top="45%" left="70%" />
-        <MapPinMarker top="60%" left="55%" />
-        <MapPinMarker top="30%" left="25%" />
-      </div>
-
-      {/* Status Bar Space */}
-      <div className="h-14" />
-
-      {/* Search Bar */}
-      <div className="px-4 mb-3">
-        <div className="flex items-center gap-3 bg-card rounded-2xl px-4 py-3 shadow-lg">
-          <Search className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-          <input
-            type="text"
-            placeholder="Search places..."
-            className="flex-1 bg-transparent text-base text-foreground placeholder:text-muted-foreground outline-none"
+        
+        {/* Adventure Pin Markers */}
+        {filteredAdventures.map((adventure) => (
+          <MapPinMarker
+            key={adventure.id}
+            adventure={adventure}
+            isSelected={selectedAdventure === adventure.id}
+            onSelect={() => handlePinSelect(adventure.id)}
           />
-          <div className="flex items-center gap-1 text-muted-foreground text-sm flex-shrink-0">
-            <span>Portland, OR</span>
-            <ChevronDown className="w-4 h-4" />
+        ))}
+        
+        {/* Current location indicator */}
+        <div className="absolute top-[55%] left-[48%] -translate-x-1/2 -translate-y-1/2">
+          <div className="relative">
+            <div className="w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow-lg" />
+            <div className="absolute inset-0 w-4 h-4 rounded-full bg-blue-500 animate-ping opacity-40" />
           </div>
         </div>
       </div>
 
-      {/* Visibility Segmented Control */}
-      <div className="px-4 mb-3">
-        <div className="flex bg-card/90 backdrop-blur-sm rounded-xl p-1 gap-0.5 shadow-sm">
-          {visibilityFilters.map(({ label, icon: Icon }) => {
-            const isActive = activeVisibility === label
-            return (
-              <button
-                key={label}
-                onClick={() => setActiveVisibility(label)}
-                className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground"
-                }`}
-              >
-                {Icon && <Icon className="w-3 h-3 flex-shrink-0" />}
-                {label}
-              </button>
-            )
-          })}
+      {/* Status Bar Space */}
+      <div className="h-12" />
+
+      {/* Search Bar - Floating over map */}
+      <div className="absolute top-12 left-0 right-0 px-4 z-20">
+        <div className={`flex items-center gap-2 bg-card rounded-2xl px-4 py-3 shadow-lg transition-all ${isSearchFocused ? "ring-2 ring-primary" : ""}`}>
+          <Search className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+          <input
+            type="text"
+            placeholder="Search adventures..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setIsSearchFocused(false)}
+            className="flex-1 bg-transparent text-base text-foreground placeholder:text-muted-foreground outline-none min-w-0"
+          />
+          <div className="h-6 w-px bg-border flex-shrink-0" />
+          <button className="flex items-center gap-1 text-primary text-sm font-medium flex-shrink-0 whitespace-nowrap">
+            <MapPin className="w-4 h-4" />
+            <span className="max-w-[80px] truncate">{currentLocation}</span>
+          </button>
         </div>
       </div>
 
-      {/* Category Filter Carousel */}
-      <div className="overflow-x-auto scrollbar-hide px-4 pb-2">
-        <div className="flex gap-2 w-max">
-          {categories.map(({ label, icon: Icon }) => {
-            const isActive = activeCategory === label
-            return (
-              <button
-                key={label}
-                onClick={() => setActiveCategory(isActive ? null : label)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 shadow-sm ${
-                  isActive
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card text-foreground border-border"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-                {label}
-              </button>
-            )
-          })}
+      {/* Filter Controls - Below search */}
+      <div className="absolute top-28 left-0 right-0 z-10">
+        {/* Visibility Segmented Control */}
+        <div className="px-4 mb-2">
+          <div className="flex bg-card/95 backdrop-blur-sm rounded-xl p-1 gap-0.5 shadow-md">
+            {visibilityFilters.map(({ label, icon: Icon }) => {
+              const isActive = activeVisibility === label
+              return (
+                <button
+                  key={label}
+                  onClick={() => setActiveVisibility(label)}
+                  className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    isActive
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {Icon && <Icon className="w-3 h-3 flex-shrink-0" />}
+                  {label}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Category Filter Carousel */}
+        <div className="overflow-x-auto scrollbar-hide px-4">
+          <div className="flex gap-2 w-max">
+            {categories.map(({ label, icon: Icon }) => {
+              const isActive = activeCategory === label
+              return (
+                <button
+                  key={label}
+                  onClick={() => setActiveCategory(isActive ? null : label)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 shadow-sm ${
+                    isActive
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-card text-foreground border-border"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                  {label}
+                </button>
+              )
+            })}
+          </div>
         </div>
       </div>
 
       {/* Current Location Button */}
-      <button className="absolute right-4 top-[240px] w-11 h-11 rounded-full bg-card shadow-lg flex items-center justify-center">
-        <Navigation className="w-5 h-5 text-primary" />
+      <button className="absolute right-4 bottom-[300px] w-11 h-11 rounded-full bg-card shadow-lg flex items-center justify-center z-10">
+        <Locate className="w-5 h-5 text-primary" />
       </button>
 
-      {/* Bottom Sheet */}
-      <div className="absolute bottom-0 left-0 right-0 bg-card rounded-t-3xl shadow-2xl">
-        <div className="flex justify-center py-3">
+      {/* Selected Adventure Preview Card */}
+      {selectedAdventureData && (
+        <AdventurePreviewCard 
+          adventure={selectedAdventureData} 
+          onClose={() => setSelectedAdventure(null)} 
+        />
+      )}
+
+      {/* Bottom Sheet - Draggable */}
+      <div 
+        ref={sheetRef}
+        className={`absolute bottom-0 left-0 right-0 bg-card rounded-t-3xl shadow-2xl transition-all duration-300 ease-out ${getSheetHeight()} ${selectedAdventure ? "translate-y-full" : ""}`}
+      >
+        {/* Drag Handle */}
+        <div 
+          className="flex justify-center py-3 cursor-grab active:cursor-grabbing touch-none"
+          onTouchStart={handleDragStart}
+          onTouchEnd={handleDragEnd}
+          onMouseDown={handleDragStart}
+          onMouseUp={handleDragEnd}
+        >
           <div className="w-10 h-1 rounded-full bg-border" />
         </div>
+        
+        {/* Sheet Header */}
         <div className="px-5 pb-3 flex items-center justify-between">
           <div>
             <h2 className="text-base font-semibold text-foreground">Nearby Adventures</h2>
-            <p className="text-sm text-muted-foreground">12 places within 25 miles</p>
+            <p className="text-sm text-muted-foreground">{filteredAdventures.length} places within 25 miles</p>
           </div>
           <button className="text-sm text-primary font-medium">List view</button>
         </div>
-        <div className="flex gap-3 overflow-x-auto px-5 pb-6 scrollbar-hide">
-          <BottomSheetCard images={["/images/swimming-hole.jpg", "/images/hidden-canyon.jpg", "/images/hero-mountain.jpg"]} title="Blue Pool" location="Willamette NF" distance="2.4 mi" rating={4.8} category="Swimming" />
-          <BottomSheetCard images={["/images/trail-forest.jpg", "/images/coastal-path.jpg"]} title="Opal Creek Trail" location="Opal Creek Wilderness" distance="4.1 mi" rating={4.9} category="Trail" />
-          <BottomSheetCard images={["/images/scenic-overlook.jpg"]} title="Tom Dick & Harry" location="Mt. Hood" distance="8.2 mi" rating={4.7} category="Viewpoint" />
-        </div>
-        <div className="border-t border-border">
+        
+        {/* Adventure Cards - Horizontal scroll in peek, vertical in expanded */}
+        {sheetState === "expanded" ? (
+          <div className="flex-1 overflow-y-auto px-5 pb-24">
+            <div className="space-y-3">
+              {filteredAdventures.map((adventure) => (
+                <button
+                  key={adventure.id}
+                  onClick={() => handlePinSelect(adventure.id)}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-secondary/50 text-left transition-colors hover:bg-secondary"
+                >
+                  <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+                    <img src={adventure.images[0]} alt={adventure.title} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-sm text-foreground line-clamp-1">{adventure.title}</h3>
+                    <p className="text-xs text-muted-foreground line-clamp-1">{adventure.location}</p>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="text-xs text-muted-foreground">{adventure.distance}</span>
+                      <div className="flex items-center gap-0.5 text-amber-500">
+                        <Star className="w-3 h-3 fill-current" />
+                        <span className="text-xs font-medium">{adventure.rating}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="flex gap-3 overflow-x-auto px-5 pb-4 scrollbar-hide">
+            {filteredAdventures.map((adventure) => (
+              <button
+                key={adventure.id}
+                onClick={() => handlePinSelect(adventure.id)}
+                className="flex-shrink-0 w-56 bg-secondary/50 rounded-2xl overflow-hidden text-left transition-transform hover:scale-[1.02]"
+              >
+                <div className="relative">
+                  <div className="aspect-[16/10] w-full overflow-hidden">
+                    <img src={adventure.images[0]} alt={adventure.title} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="absolute top-2 left-2">
+                    <span className="px-2 py-0.5 rounded-full bg-white/90 backdrop-blur-sm text-[10px] font-medium text-foreground">
+                      {adventure.category}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-3">
+                  <h3 className="font-semibold text-sm text-foreground line-clamp-1 mb-0.5">{adventure.title}</h3>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{adventure.distance}</span>
+                    <div className="flex items-center gap-0.5 text-amber-500">
+                      <Star className="w-3 h-3 fill-current" />
+                      <span className="font-medium">{adventure.rating}</span>
+                    </div>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+        
+        {/* Tab Bar */}
+        <div className="absolute bottom-0 left-0 right-0 bg-card border-t border-border">
           <div className="flex items-end justify-around pt-2 pb-7 px-2">
             <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
               <Home className="w-6 h-6 text-muted-foreground" />
