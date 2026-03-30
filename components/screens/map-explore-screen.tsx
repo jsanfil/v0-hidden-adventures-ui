@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Map, Bookmark, User, Search, MapPin, Star, Navigation, Globe, Users, Lock, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Plus, X, ChevronRight, Locate, SlidersHorizontal, Check } from "lucide-react"
+import { Home, Map, Bookmark, User, Search, MapPin, Star, Navigation, Globe, Users, Lock, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Plus, X, ChevronRight, Locate, SlidersHorizontal, Check, Heart } from "lucide-react"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 import { useState, useRef } from "react"
 import type { LucideIcon } from "lucide-react"
@@ -146,48 +146,50 @@ interface AdventurePreviewCardProps {
 
 function AdventurePreviewCard({ adventure, onClose }: AdventurePreviewCardProps) {
   return (
-    <div className="absolute bottom-32 left-4 right-4 bg-card rounded-2xl shadow-2xl overflow-hidden border border-border/50 animate-in slide-in-from-bottom-4 duration-200">
+    <div className="absolute bottom-24 left-4 right-4 rounded-2xl overflow-hidden bg-card shadow-2xl animate-in slide-in-from-bottom-4 duration-200">
       <div className="relative">
         <AdventureImageCarousel
           images={adventure.images}
           alt={adventure.title}
-          aspectRatio="aspect-[16/9]"
+          aspectRatio="aspect-[4/3]"
           dotsPosition="inside"
         />
-        {/* Close button */}
-        <button 
-          onClick={(e) => { e.stopPropagation(); onClose(); }}
-          className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center z-10"
-        >
-          <X className="w-4 h-4 text-white" />
-        </button>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent pointer-events-none" />
+
         {/* Category badge */}
-        <div className="absolute top-2 left-2 pointer-events-none z-10">
-          <span className="px-2 py-0.5 rounded-full bg-white/90 backdrop-blur-sm text-xs font-medium text-foreground">
+        <div className="absolute top-3 left-3 pointer-events-none z-10">
+          <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-xs font-medium text-foreground">
             {adventure.category}
           </span>
         </div>
-      </div>
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-2">
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-base text-foreground line-clamp-1">{adventure.title}</h3>
-            <div className="flex items-center gap-1 text-muted-foreground text-sm mt-0.5">
+
+        {/* Close button */}
+        <button 
+          onClick={(e) => { e.stopPropagation(); onClose(); }}
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center z-10"
+        >
+          <X className="w-4 h-4 text-foreground" />
+        </button>
+
+        {/* Title & meta — overlaid on image */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 pb-8 pointer-events-none">
+          <h3 className="font-semibold text-white text-base mb-1.5 leading-snug">
+            {adventure.title}
+          </h3>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-white/80 text-sm">
               <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
               <span className="line-clamp-1">{adventure.location}</span>
+              <span className="mx-1">·</span>
+              <span>{adventure.distance}</span>
+            </div>
+            <div className="flex items-center gap-3 text-white/80 text-sm flex-shrink-0 ml-3">
+              <div className="flex items-center gap-1">
+                <Star className="w-3.5 h-3.5 fill-current" />
+                <span>{adventure.rating}</span>
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-1 text-amber-500 flex-shrink-0 ml-2">
-            <Star className="w-4 h-4 fill-current" />
-            <span className="font-semibold text-sm">{adventure.rating}</span>
-          </div>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">{adventure.distance} away</span>
-          <button className="flex items-center gap-1 px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium">
-            View Details
-            <ChevronRight className="w-4 h-4" />
-          </button>
         </div>
       </div>
     </div>
