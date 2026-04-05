@@ -1,13 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronLeft, Heart, MapPin, Star, MessageCircle, Navigation, AlertTriangle, Plus } from "lucide-react"
+import { ChevronLeft, Heart, MapPin, Star, MessageCircle, Navigation, AlertTriangle, Share2, Bookmark, ChevronRight } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Button } from "@/components/ui/button"
 
-// Types matching the actual database schema
+// ─── Types matching the actual database schema ────────────────────────────────
+
 interface Author {
   handle: string
   displayName: string
@@ -61,86 +60,86 @@ interface Adventure {
   comments?: Comment[]
 }
 
-// Sample data matching the schema
+// ─── Sample data ──────────────────────────────────────────────────────────────
+
 const sampleAdventure: Adventure = {
   id: "f34e73a8-6b33-5146-855f-445c157634f7",
-  title: "Big Basin Café",
-  summary: "A cute little cafe in downtown Saratoga.",
-  body: "There is a wide variety of pastries, sandwiches, drinks, and desserts. We Roast Organic Coffee Beans.",
-  categorySlug: "cafe",
+  title: "Blue Pool at Tamolitch Falls",
+  summary: "One of Oregon's most stunning natural wonders hidden deep in the McKenzie River Trail.",
+  body: "The pool's striking blue color comes from the McKenzie River emerging from underground lava flows, creating an otherworldly turquoise that has to be seen to be believed. Best visited early morning before crowds arrive.",
+  categorySlug: "swimming",
   visibility: "public",
   createdAt: "2026-03-06 00:00:00+00",
   publishedAt: "2026-03-06 12:00:00+00",
   updatedAt: "2026-03-07 00:00:00+00",
-  location: {
-    latitude: 37.2638,
-    longitude: -122.023
-  },
+  location: { latitude: 44.2638, longitude: -122.023 },
   author: {
     handle: "jacksanfil",
     displayName: "Jack Sanfil",
     homeCity: "Saratoga",
     homeRegion: "CA",
-    avatarUrl: "/images/avatar-jack.jpg"
+    avatarUrl: "",
   },
   primaryMedia: {
     id: "b7cb6474-dc03-54d7-aca5-f7607b851cec",
-    storageKey: "/images/swimming-hole.jpg"
+    storageKey: "/images/swimming-hole.jpg",
   },
   stats: {
-    favoriteCount: 24,
+    favoriteCount: 2431,
     commentCount: 2,
-    ratingCount: 15,
-    averageRating: 4.5
+    ratingCount: 847,
+    averageRating: 4.9,
   },
-  placeLabel: "Big Basin Café",
+  placeLabel: "McKenzie River Trail, Willamette NF",
   media: [
     { id: "1", storageKey: "/images/swimming-hole.jpg" },
     { id: "2", storageKey: "/images/hidden-canyon.jpg" },
     { id: "3", storageKey: "/images/trail-forest.jpg" },
+    { id: "4", storageKey: "/images/hero-mountain.jpg" },
   ],
   comments: [
     {
       id: "c1",
       authorHandle: "megan",
       authorDisplayName: "megan",
-      authorAvatarUrl: "/images/avatar-megan.jpg",
-      body: "tastes good though",
-      createdAt: "2019-04-01T10:00:00Z"
+      authorAvatarUrl: "",
+      body: "Absolutely magical! Got there early and had it all to ourselves.",
+      createdAt: "2019-04-01T10:00:00Z",
     },
     {
       id: "c2",
       authorHandle: "megan",
       authorDisplayName: "megan",
-      authorAvatarUrl: "/images/avatar-megan.jpg",
-      body: "takes thirty minutes for them to pull a muffin out of the case",
-      createdAt: "2019-04-01T11:00:00Z"
-    }
-  ]
+      authorAvatarUrl: "",
+      body: "Takes thirty minutes on the trail before you reach the pool but totally worth every step.",
+      createdAt: "2019-04-01T11:00:00Z",
+    },
+  ],
 }
 
-// Category icon mapping
-const categoryIcons: Record<string, string> = {
-  cafe: "☕",
-  desert_spots: "🏜️",
-  hiking: "🥾",
-  swimming: "🏊",
-  camping: "⛺",
-  scenic: "🌄"
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const categoryLabels: Record<string, string> = {
+  cafe: "Cafe",
+  desert_spots: "Desert",
+  hiking: "Hiking",
+  swimming: "Swimming Hole",
+  camping: "Camping",
+  scenic: "Scenic View",
 }
 
 function formatRelativeTime(dateString: string): string {
   const date = new Date(dateString)
   const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+  const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
   const diffYears = Math.floor(diffDays / 365)
-  
-  if (diffYears > 0) return `${diffYears} year${diffYears > 1 ? 's' : ''} ago`
-  if (diffDays > 30) return `${Math.floor(diffDays / 30)} month${Math.floor(diffDays / 30) > 1 ? 's' : ''} ago`
-  if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`
+  if (diffYears > 0) return `${diffYears} year${diffYears > 1 ? "s" : ""} ago`
+  if (diffDays > 30) return `${Math.floor(diffDays / 30)} month${Math.floor(diffDays / 30) > 1 ? "s" : ""} ago`
+  if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`
   return "today"
 }
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 interface AdventureDetailScreenProps {
   adventure?: Adventure
@@ -148,219 +147,174 @@ interface AdventureDetailScreenProps {
 
 export function AdventureDetailScreen({ adventure = sampleAdventure }: AdventureDetailScreenProps) {
   const [isFavorited, setIsFavorited] = useState(false)
-  const [showComments, setShowComments] = useState(false)
-  
-  const images = adventure.media?.map(m => m.storageKey) || [adventure.primaryMedia.storageKey]
-  const categoryIcon = categoryIcons[adventure.categorySlug] || "📍"
-  
-  if (showComments) {
-    return (
-      <div className="relative w-full h-full bg-background flex flex-col">
-        {/* Comments Header */}
-        <div className="flex-shrink-0 bg-secondary/50 pt-14 pb-3 px-4">
-          <div className="flex items-center justify-between">
-            <Button 
-              variant="default" 
-              size="sm" 
-              className="rounded-full"
-              onClick={() => setShowComments(false)}
-            >
-              Back
-            </Button>
-            <h1 className="text-lg font-semibold text-foreground">Comments</h1>
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="rounded-full w-9 h-9"
-            >
-              <Plus className="w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-        
-        {/* Comments List */}
-        <ScrollArea className="flex-1">
-          <div className="px-4 py-4 space-y-6">
-            {adventure.comments?.map((comment) => (
-              <div key={comment.id} className="flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-foreground">{comment.authorDisplayName}</span>
-                  <span className="text-xs text-muted-foreground">{formatRelativeTime(comment.createdAt)}</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage src={comment.authorAvatarUrl} />
-                    <AvatarFallback className="bg-secondary text-secondary-foreground text-sm">
-                      {comment.authorDisplayName.slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 bg-secondary/60 rounded-2xl px-4 py-3">
-                    <p className="text-sm text-foreground">{comment.body}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-            
-            {(!adventure.comments || adventure.comments.length === 0) && (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground text-sm">No comments yet</p>
-                <p className="text-muted-foreground text-xs mt-1">Be the first to comment!</p>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
-      </div>
-    )
-  }
-  
+
+  const images = adventure.media?.map((m) => m.storageKey) ?? [adventure.primaryMedia.storageKey]
+  const categoryLabel = categoryLabels[adventure.categorySlug] ?? adventure.categorySlug
+
   return (
     <div className="relative w-full h-full bg-background flex flex-col">
-      {/* Header with Author */}
-      <div className="flex-shrink-0 bg-secondary/50 pt-14 pb-3 px-4">
-        <div className="flex items-center justify-between">
-          <button className="text-sm font-medium text-foreground">
-            Back
+
+      {/* ── Hero Carousel ──────────────────────────────────────────────────── */}
+      <div className="relative h-[320px] flex-shrink-0">
+        <AdventureImageCarousel
+          images={images}
+          alt={adventure.title}
+          className="h-full"
+          aspectRatio="h-full"
+          dotsPosition="inside"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent pointer-events-none" />
+
+        {/* Floating nav */}
+        <div className="absolute top-0 left-0 right-0 pt-14 px-4 flex items-center justify-between pointer-events-none">
+          <button className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm pointer-events-auto">
+            <ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
           <div className="flex items-center gap-2">
-            <Avatar className="w-8 h-8">
+            <button className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm pointer-events-auto">
+              <Share2 className="w-5 h-5 text-foreground" />
+            </button>
+            <button
+              className={`w-10 h-10 rounded-full flex items-center justify-center shadow-sm pointer-events-auto transition-colors ${
+                isFavorited ? "bg-primary" : "bg-white/90 backdrop-blur-sm"
+              }`}
+              onClick={() => setIsFavorited(!isFavorited)}
+            >
+              <Bookmark
+                className={`w-5 h-5 ${isFavorited ? "text-primary-foreground fill-primary-foreground" : "text-foreground"}`}
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Scrollable content panel ───────────────────────────────────────── */}
+      <div className="flex-1 overflow-y-auto -mt-6 relative">
+        <div className="bg-background rounded-t-3xl pt-6 px-5 pb-36">
+
+          {/* Header */}
+          <div className="mb-4">
+            <div className="flex items-start justify-between mb-2">
+              <span className="px-2.5 py-1 rounded-full bg-secondary text-xs font-medium text-secondary-foreground">
+                {categoryLabel}
+              </span>
+              {adventure.stats.averageRating > 0 && (
+                <div className="flex items-center gap-1 text-amber-500">
+                  <Star className="w-4 h-4 fill-current" />
+                  <span className="font-semibold text-sm">{adventure.stats.averageRating.toFixed(1)}</span>
+                  <span className="text-muted-foreground text-sm">({adventure.stats.ratingCount.toLocaleString()})</span>
+                </div>
+              )}
+            </div>
+            <h1 className="text-2xl font-semibold text-foreground mb-1 text-balance">{adventure.title}</h1>
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <MapPin className="w-4 h-4 flex-shrink-0" />
+              <span className="text-sm">{adventure.placeLabel}</span>
+            </div>
+          </div>
+
+          {/* Author */}
+          <div className="flex items-center gap-3 py-4 border-y border-border mb-5">
+            <Avatar className="w-10 h-10">
               <AvatarImage src={adventure.author.avatarUrl} />
-              <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+              <AvatarFallback className="bg-primary text-primary-foreground text-sm">
                 {adventure.author.displayName.slice(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <span className="text-sm font-medium text-foreground">{adventure.author.handle}</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground">Shared by {adventure.author.displayName}</p>
+              <p className="text-xs text-muted-foreground">
+                {adventure.author.homeCity}, {adventure.author.homeRegion}
+              </p>
+            </div>
+            <button className="px-3 py-1.5 rounded-full text-xs font-medium border border-border text-foreground bg-card hover:bg-secondary transition-colors">
+              Follow
+            </button>
           </div>
-          <button 
-            className="p-1"
-            onClick={() => setIsFavorited(!isFavorited)}
-          >
-            <Heart 
-              className={`w-6 h-6 ${isFavorited ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} 
-            />
+
+          {/* Summary + body */}
+          <div className="mb-6">
+            <h2 className="text-base font-semibold text-foreground mb-2">About this place</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {adventure.summary}
+            </p>
+            {adventure.body && (
+              <p className="text-sm text-muted-foreground leading-relaxed mt-2">
+                {adventure.body}
+              </p>
+            )}
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-col gap-3 mb-6">
+            <button className="w-full h-12 rounded-2xl border border-border bg-card text-foreground text-sm font-medium flex items-center justify-center gap-2 hover:bg-secondary transition-colors">
+              <Navigation className="w-4 h-4" />
+              Get Location
+            </button>
+            <button className="w-full h-12 rounded-2xl border border-border bg-card text-foreground text-sm font-medium flex items-center justify-center gap-2 hover:bg-secondary transition-colors">
+              <Star className="w-4 h-4" />
+              Rate Adventure
+            </button>
+          </div>
+
+          {/* Comments */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <MessageCircle className="w-5 h-5 text-muted-foreground" />
+                <h2 className="text-base font-semibold text-foreground">
+                  {adventure.stats.commentCount} {adventure.stats.commentCount === 1 ? "Comment" : "Comments"}
+                </h2>
+              </div>
+              <button className="text-muted-foreground">
+                <AlertTriangle className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-5">
+              {adventure.comments?.map((comment) => (
+                <div key={comment.id} className="flex items-start gap-3">
+                  <Avatar className="w-9 h-9 flex-shrink-0">
+                    <AvatarImage src={comment.authorAvatarUrl} />
+                    <AvatarFallback className="bg-secondary text-secondary-foreground text-xs">
+                      {comment.authorDisplayName.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <span className="text-sm font-medium text-foreground">{comment.authorDisplayName}</span>
+                      <span className="text-xs text-muted-foreground flex-shrink-0">
+                        {formatRelativeTime(comment.createdAt)}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{comment.body}</p>
+                  </div>
+                </div>
+              ))}
+
+              {(!adventure.comments || adventure.comments.length === 0) && (
+                <p className="text-sm text-muted-foreground text-center py-4">No comments yet. Be the first!</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Sticky bottom CTA ──────────────────────────────────────────────── */}
+      <div className="absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border px-5 pt-4 pb-8">
+        <div className="flex items-center gap-3">
+          <div className="flex-1">
+            <p className="text-xs text-muted-foreground">
+              {adventure.stats.favoriteCount.toLocaleString()} people saved this
+            </p>
+          </div>
+          <button className="flex-1 h-12 rounded-2xl text-base font-medium bg-primary text-primary-foreground flex items-center justify-center gap-2 transition-opacity hover:opacity-90">
+            <Navigation className="w-5 h-5" />
+            Start Adventure
           </button>
         </div>
       </div>
-      
-      {/* Scrollable Content */}
-      <ScrollArea className="flex-1">
-        <div className="px-4 pb-6">
-          {/* Title with Category Icon */}
-          <div className="flex items-center gap-3 py-4 bg-secondary/30 -mx-4 px-4 mb-4">
-            <span className="text-2xl">{categoryIcon}</span>
-            <h1 className="text-xl font-semibold text-foreground">{adventure.title}</h1>
-          </div>
-          
-          {/* Image Carousel */}
-          <div className="relative rounded-lg overflow-hidden mb-4">
-            <AdventureImageCarousel
-              images={images}
-              alt={adventure.title}
-              className="w-full"
-              aspectRatio="aspect-[4/3]"
-              dotsPosition="below"
-            />
-          </div>
-          
-          {/* Description - Summary + Body */}
-          <div className="mb-6">
-            <p className="text-sm text-foreground leading-relaxed">
-              {adventure.summary} {adventure.body}
-            </p>
-          </div>
-          
-          {/* Action Buttons */}
-          <div className="space-y-3 mb-6">
-            <Button 
-              variant="outline" 
-              className="w-full h-12 rounded-lg border-2 text-base font-medium"
-            >
-              <Navigation className="w-5 h-5 mr-2" />
-              Get Location
-            </Button>
-            <Button 
-              variant="outline" 
-              className="w-full h-12 rounded-lg border-2 text-base font-medium"
-            >
-              <Star className="w-5 h-5 mr-2" />
-              Rate Adventure
-            </Button>
-          </div>
-          
-          {/* Stats Row - Comments & Report */}
-          <div className="flex items-center justify-between py-4 border-t border-border">
-            <button 
-              className="flex items-center gap-2 text-muted-foreground"
-              onClick={() => setShowComments(true)}
-            >
-              <MessageCircle className="w-5 h-5" />
-              <span className="text-sm">{adventure.stats.commentCount} comments</span>
-            </button>
-            <button className="text-muted-foreground">
-              <AlertTriangle className="w-5 h-5" />
-            </button>
-          </div>
-          
-          {/* Rating Display */}
-          {adventure.stats.averageRating > 0 && (
-            <div className="flex items-center gap-2 py-3 border-t border-border">
-              <div className="flex items-center gap-1 text-amber-500">
-                <Star className="w-4 h-4 fill-current" />
-                <span className="font-semibold text-sm">{adventure.stats.averageRating.toFixed(1)}</span>
-              </div>
-              <span className="text-muted-foreground text-sm">({adventure.stats.ratingCount} ratings)</span>
-              <span className="text-muted-foreground text-sm ml-auto">
-                {adventure.stats.favoriteCount} favorites
-              </span>
-            </div>
-          )}
-          
-          {/* Location Info */}
-          <div className="py-4 border-t border-border">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <MapPin className="w-4 h-4" />
-              <span className="text-sm">{adventure.placeLabel}</span>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {adventure.author.homeCity}, {adventure.author.homeRegion}
-            </p>
-          </div>
-          
-          {/* Comments Preview */}
-          {adventure.comments && adventure.comments.length > 0 && (
-            <div className="pt-4 border-t border-border">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-semibold text-foreground">Comments</h2>
-                <button 
-                  className="text-sm text-primary font-medium"
-                  onClick={() => setShowComments(true)}
-                >
-                  See all
-                </button>
-              </div>
-              
-              <div className="space-y-4 max-h-[200px] overflow-y-auto">
-                {adventure.comments.slice(0, 3).map((comment) => (
-                  <div key={comment.id} className="flex items-start gap-3">
-                    <Avatar className="w-9 h-9">
-                      <AvatarImage src={comment.authorAvatarUrl} />
-                      <AvatarFallback className="bg-secondary text-secondary-foreground text-xs">
-                        {comment.authorDisplayName.slice(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-foreground">{comment.authorDisplayName}</span>
-                        <span className="text-xs text-muted-foreground">{formatRelativeTime(comment.createdAt)}</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{comment.body}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </ScrollArea>
+
     </div>
   )
 }
