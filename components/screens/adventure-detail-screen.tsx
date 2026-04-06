@@ -164,21 +164,25 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
   }
 
   return (
-    <div className="relative w-full h-full bg-background flex flex-col">
+    <div className="relative w-full h-full bg-background">
 
-      {/* ── Hero Carousel ──────────────────────────────────────────────────── */}
-      <div className="relative h-[320px] flex-shrink-0">
-        <AdventureImageCarousel
-          images={images}
-          alt={adventure.title}
-          className="h-full"
-          aspectRatio="h-full"
-          dotsPosition="inside"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent pointer-events-none" />
+      {/* ── Single scroll container ────────────────────────────────────────── */}
+      <div className="h-full overflow-y-auto">
+        
+        {/* Hero Carousel - sticky at top, gets covered as you scroll */}
+        <div className="sticky top-0 h-[320px] z-0">
+          <AdventureImageCarousel
+            images={images}
+            alt={adventure.title}
+            className="h-full"
+            aspectRatio="h-full"
+            dotsPosition="inside"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent pointer-events-none" />
+        </div>
 
-        {/* Floating nav */}
-        <div className="absolute top-0 left-0 right-0 pt-14 px-4 flex items-center justify-between pointer-events-none">
+        {/* Floating nav - fixed position so it stays visible */}
+        <div className="fixed top-0 left-0 right-0 pt-14 px-4 flex items-center justify-between pointer-events-none z-20">
           <button className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm pointer-events-auto">
             <ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
@@ -198,11 +202,9 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
             </button>
           </div>
         </div>
-      </div>
 
-      {/* ── Scrollable content panel ───────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto -mt-6 relative">
-        <div className="bg-background rounded-t-3xl pt-6 px-5 pb-24">
+        {/* Content panel - slides up over the hero */}
+        <div className="relative z-10 -mt-6 bg-background rounded-t-3xl pt-6 px-5 pb-24 min-h-[calc(100%-320px+24px)]">
 
           {/* Header */}
           <div className="mb-4">
@@ -358,8 +360,8 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
         </div>
       </div>
 
-      {/* Sticky comment input bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border px-4 pt-3 pb-8">
+      {/* Sticky comment input bar - fixed at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border px-4 pt-3 pb-8 z-30">
         <div className="flex items-center gap-3">
           <Avatar className="w-8 h-8 flex-shrink-0">
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
