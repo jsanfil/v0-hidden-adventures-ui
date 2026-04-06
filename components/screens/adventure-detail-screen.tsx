@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronLeft, Heart, MapPin, Star, MessageCircle, Navigation, AlertTriangle, Share2, Bookmark, ChevronRight } from "lucide-react"
+import { ChevronLeft, Heart, MapPin, Star, MessageCircle, AlertTriangle, Share2, Bookmark, ChevronRight } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 
@@ -13,6 +13,7 @@ interface Author {
   homeCity: string
   homeRegion: string
   avatarUrl?: string
+  adventureCount?: number
 }
 
 interface Media {
@@ -224,7 +225,7 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-foreground">Shared by {adventure.author.displayName}</p>
               <p className="text-xs text-muted-foreground">
-                {adventure.author.homeCity}, {adventure.author.homeRegion}
+                {adventure.author.homeCity}, {adventure.author.homeRegion} · {adventure.author.adventureCount ?? 48} adventures
               </p>
             </div>
             <button className="px-3 py-1.5 rounded-full text-xs font-medium border border-border text-foreground bg-card hover:bg-secondary transition-colors">
@@ -245,12 +246,37 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
             )}
           </div>
 
-          {/* Action buttons */}
-          <div className="flex flex-col gap-3 mb-6">
-            <button className="w-full h-12 rounded-2xl border border-border bg-card text-foreground text-sm font-medium flex items-center justify-center gap-2 hover:bg-secondary transition-colors">
-              <Navigation className="w-4 h-4" />
-              Get Location
-            </button>
+          {/* Location + mini-map */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-base font-semibold text-foreground">Location</h2>
+              <a
+                href={`https://maps.apple.com/?q=${adventure.location.latitude},${adventure.location.longitude}`}
+                className="flex items-center gap-1 text-sm font-medium text-primary"
+              >
+                Get Directions
+                <ChevronRight className="w-4 h-4" />
+              </a>
+            </div>
+            <div className="h-36 rounded-2xl bg-[#dde8d8] relative overflow-hidden">
+              {/* Stylised map background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#cfdec9] to-[#dde8d8]" />
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 320 144" fill="none" aria-hidden="true">
+                <path d="M0 80 Q80 55 160 72 T320 58" stroke="white" strokeWidth="5" fill="none" opacity="0.7" />
+                <path d="M0 95 Q80 70 160 88 T320 74" stroke="white" strokeWidth="2" fill="none" opacity="0.35" />
+                <ellipse cx="160" cy="75" rx="36" ry="22" fill="#a8c8b8" opacity="0.55" />
+              </svg>
+              {/* Pin */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center shadow-lg">
+                  <MapPin className="w-4 h-4 text-primary-foreground" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Rate adventure */}
+          <div className="mb-6">
             <button className="w-full h-12 rounded-2xl border border-border bg-card text-foreground text-sm font-medium flex items-center justify-center gap-2 hover:bg-secondary transition-colors">
               <Star className="w-4 h-4" />
               Rate Adventure
@@ -280,7 +306,7 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
                       {comment.authorDisplayName.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 bg-secondary rounded-2xl rounded-tl-sm px-4 py-3">
                     <div className="flex items-center justify-between gap-2 mb-1">
                       <span className="text-sm font-medium text-foreground">{comment.authorDisplayName}</span>
                       <span className="text-xs text-muted-foreground flex-shrink-0">
@@ -300,20 +326,7 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
         </div>
       </div>
 
-      {/* ── Sticky bottom CTA ──────────────────────────────────────────────── */}
-      <div className="absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border px-5 pt-4 pb-8">
-        <div className="flex items-center gap-3">
-          <div className="flex-1">
-            <p className="text-xs text-muted-foreground">
-              {adventure.stats.favoriteCount.toLocaleString()} people saved this
-            </p>
-          </div>
-          <button className="flex-1 h-12 rounded-2xl text-base font-medium bg-primary text-primary-foreground flex items-center justify-center gap-2 transition-opacity hover:opacity-90">
-            <Navigation className="w-5 h-5" />
-            Start Adventure
-          </button>
-        </div>
-      </div>
+
 
     </div>
   )
