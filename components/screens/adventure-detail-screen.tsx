@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronLeft, Heart, MapPin, Star, MessageCircle, AlertTriangle, Share2, Bookmark, ChevronRight } from "lucide-react"
+import { ChevronLeft, MapPin, Star, MessageCircle, MoreHorizontal, Share2, Bookmark, ChevronRight, Send } from "lucide-react"
+import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 
@@ -148,9 +149,19 @@ interface AdventureDetailScreenProps {
 
 export function AdventureDetailScreen({ adventure = sampleAdventure }: AdventureDetailScreenProps) {
   const [isFavorited, setIsFavorited] = useState(false)
+  const [userRating, setUserRating] = useState(0)
+  const [hoverRating, setHoverRating] = useState(0)
+  const [commentText, setCommentText] = useState("")
 
   const images = adventure.media?.map((m) => m.storageKey) ?? [adventure.primaryMedia.storageKey]
   const categoryLabel = categoryLabels[adventure.categorySlug] ?? adventure.categorySlug
+  
+  const handleSubmitComment = () => {
+    if (commentText.trim()) {
+      // TODO: Submit comment to API
+      setCommentText("")
+    }
+  }
 
   return (
     <div className="relative w-full h-full bg-background flex flex-col">
@@ -191,7 +202,7 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
 
       {/* ── Scrollable content panel ───────────────────────────────────────── */}
       <div className="flex-1 overflow-y-auto -mt-6 relative">
-        <div className="bg-background rounded-t-3xl pt-6 px-5 pb-36">
+        <div className="bg-background rounded-t-3xl pt-6 px-5 pb-24">
 
           {/* Header */}
           <div className="mb-4">
@@ -275,12 +286,33 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
             </div>
           </div>
 
-          {/* Rate adventure */}
+          {/* Rate this adventure */}
           <div className="mb-6">
-            <button className="w-full h-12 rounded-2xl border border-border bg-card text-foreground text-sm font-medium flex items-center justify-center gap-2 hover:bg-secondary transition-colors">
-              <Star className="w-4 h-4" />
-              Rate Adventure
-            </button>
+            <h2 className="text-base font-semibold text-foreground mb-3">Rate this adventure</h2>
+            <div className="flex items-center gap-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  className="p-1 transition-transform hover:scale-110"
+                  onMouseEnter={() => setHoverRating(star)}
+                  onMouseLeave={() => setHoverRating(0)}
+                  onClick={() => setUserRating(star)}
+                >
+                  <Star
+                    className={`w-7 h-7 transition-colors ${
+                      star <= (hoverRating || userRating)
+                        ? "fill-amber-500 text-amber-500"
+                        : "text-muted-foreground/40"
+                    }`}
+                  />
+                </button>
+              ))}
+              {userRating > 0 && (
+                <span className="text-sm text-muted-foreground ml-2">
+                  {userRating === 5 ? "Amazing!" : userRating === 4 ? "Great" : userRating === 3 ? "Good" : userRating === 2 ? "Fair" : "Poor"}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Comments */}
@@ -292,8 +324,8 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
                   {adventure.stats.commentCount} {adventure.stats.commentCount === 1 ? "Comment" : "Comments"}
                 </h2>
               </div>
-              <button className="text-muted-foreground">
-                <AlertTriangle className="w-5 h-5" />
+              <button className="text-muted-foreground hover:text-foreground transition-colors p-1">
+                <MoreHorizontal className="w-5 h-5" />
               </button>
             </div>
 
@@ -326,7 +358,31 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
         </div>
       </div>
 
-
+      {/* Sticky comment input bar */}
+      <div className="absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border px-4 pt-3 pb-8">
+        <div className="flex items-center gap-3">
+          <Avatar className="w-8 h-8 flex-shrink-0">
+            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+              ME
+            </AvatarFallback>
+          </Avatar>
+          <Input
+            type="text"
+            placeholder="Add a comment..."
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSubmitComment()}
+            className="flex-1 h-10 rounded-full bg-secondary border-0 text-sm placeholder:text-muted-foreground"
+          />
+          <button
+            onClick={handleSubmitComment}
+            disabled={!commentText.trim()}
+            className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-40 transition-opacity"
+          >
+            <Send className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
 
     </div>
   )
