@@ -299,14 +299,14 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
 
             <div className="space-y-5">
               {adventure.comments?.map((comment) => (
-                <div key={comment.id} className="flex items-start gap-3">
+                <div key={comment.id} className="bg-muted rounded-2xl rounded-tl-sm p-4 flex items-start gap-3">
                   <Avatar className="w-9 h-9 flex-shrink-0">
                     <AvatarImage src={comment.authorAvatarUrl} />
-                    <AvatarFallback className="bg-secondary text-secondary-foreground text-xs">
+                    <AvatarFallback className="bg-accent text-accent-foreground text-xs font-medium">
                       {comment.authorDisplayName.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 min-w-0 bg-secondary rounded-2xl rounded-tl-sm px-4 py-3">
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2 mb-1">
                       <span className="text-sm font-medium text-foreground">{comment.authorDisplayName}</span>
                       <span className="text-xs text-muted-foreground flex-shrink-0">
