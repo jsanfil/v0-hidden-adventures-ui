@@ -390,7 +390,7 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
                 handleSubmitComment()
               }
             }}
-            className="flex-1 h-10 max-h-24 rounded-full bg-secondary border-0 text-sm placeholder:text-muted-foreground p-3 resize-none overflow-hidden outline-none focus:ring-1 focus:ring-primary/20 transition-all"
+            className="flex-1 h-10 max-h-24 rounded-full bg-muted border-0 text-sm placeholder:text-muted-foreground p-3 resize-none overflow-hidden outline-none focus:ring-1 focus:ring-primary/20 transition-all"
           />
           <button
             onClick={handleSubmitComment}
