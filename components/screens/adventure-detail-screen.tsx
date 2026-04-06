@@ -1,8 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { ChevronLeft, MapPin, Star, MessageCircle, MoreHorizontal, Share2, Bookmark, ChevronRight, Send } from "lucide-react"
-import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 
@@ -152,9 +151,18 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
   const [userRating, setUserRating] = useState(0)
   const [hoverRating, setHoverRating] = useState(0)
   const [commentText, setCommentText] = useState("")
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const images = adventure.media?.map((m) => m.storageKey) ?? [adventure.primaryMedia.storageKey]
   const categoryLabel = categoryLabels[adventure.categorySlug] ?? adventure.categorySlug
+  
+  // Auto-expand textarea as user types
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 100) + "px"
+    }
+  }, [commentText])
   
   const handleSubmitComment = () => {
     if (commentText.trim()) {
@@ -368,18 +376,23 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
               ME
             </AvatarFallback>
           </Avatar>
-          <Input
-            type="text"
+          <textarea
+            ref={textareaRef}
             placeholder="Add a comment..."
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSubmitComment()}
-            className="flex-1 h-10 rounded-full bg-secondary border-0 text-sm placeholder:text-muted-foreground"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault()
+                handleSubmitComment()
+              }
+            }}
+            className="flex-1 min-h-10 max-h-24 rounded-full bg-secondary border-0 text-sm placeholder:text-muted-foreground p-3 resize-none overflow-hidden outline-none focus:ring-1 focus:ring-primary/20 transition-all"
           />
           <button
             onClick={handleSubmitComment}
             disabled={!commentText.trim()}
-            className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-40 transition-opacity"
+            className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-40 transition-opacity flex-shrink-0"
           >
             <Send className="w-4 h-4" />
           </button>
