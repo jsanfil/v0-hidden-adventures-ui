@@ -158,9 +158,12 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
   
   // Auto-expand textarea as user types
   useEffect(() => {
-    if (textareaRef.current) {
+    if (textareaRef.current && commentText) {
       textareaRef.current.style.height = "auto"
       textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 100) + "px"
+    } else if (textareaRef.current) {
+      // Reset to single line when empty
+      textareaRef.current.style.height = "40px"
     }
   }, [commentText])
   
