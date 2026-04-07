@@ -18,7 +18,7 @@ Thought for 3sHere's a concise design overview for the Adventure Detail screen:
 2. **Title** - Large semibold text (24pt equivalent)
 3. **Location label** - Map pin icon + place label text in muted color
 4. **Author row** - Avatar, "Shared by [Name]", subtitle "[City], [Region] · [N] adventures", Follow button
-5. **About section** - "About this place" header, summary + body text
+5. **About section** - "About this place" header with a single description field
 6. **Location/Map section** - "Location" header with "Get Directions >" link, stylized mini-map placeholder (soft green/sage tones) with centered pin marker. Tapping "Get Directions" opens native maps app
 7. **Rate section** - "Rate this adventure" header, 5 tappable star icons (empty = muted, filled = amber), contextual feedback text appears after selection
 8. **Comments section** - Comment count header with 3-dot menu (for report/flag options), list of comment bubbles
@@ -59,7 +59,7 @@ Thought for 3sHere's a concise design overview for the Adventure Detail screen:
 ### Data Model (from schema)
 
 ```plaintext
-Adventure: id, title, summary, body, categorySlug, placeLabel, location {lat, lng}, 
+Adventure: id, title, description, categorySlug, placeLabel, location {lat, lng}, 
            author {handle, displayName, homeCity, homeRegion, avatarUrl, adventureCount},
            primaryMedia, media[], stats {favoriteCount, commentCount, ratingCount, averageRating},
            comments[] {id, authorHandle, authorDisplayName, authorAvatarUrl, body, createdAt}

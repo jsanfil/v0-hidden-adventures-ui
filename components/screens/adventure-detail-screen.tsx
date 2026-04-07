@@ -45,8 +45,7 @@ interface Comment {
 interface Adventure {
   id: string
   title: string
-  summary: string
-  body: string
+  description: string
   categorySlug: string
   visibility: "public" | "private"
   createdAt: string
@@ -66,8 +65,7 @@ interface Adventure {
 const sampleAdventure: Adventure = {
   id: "f34e73a8-6b33-5146-855f-445c157634f7",
   title: "Blue Pool at Tamolitch Falls",
-  summary: "One of Oregon's most stunning natural wonders hidden deep in the McKenzie River Trail.",
-  body: "The pool's striking blue color comes from the McKenzie River emerging from underground lava flows, creating an otherworldly turquoise that has to be seen to be believed. Best visited early morning before crowds arrive.",
+  description: "The pool's striking blue color comes from the McKenzie River emerging from underground lava flows, creating an otherworldly turquoise that has to be seen to be believed. Best visited early morning before crowds arrive.",
   categorySlug: "swimming",
   visibility: "public",
   createdAt: "2026-03-06 00:00:00+00",
@@ -257,17 +255,12 @@ export function AdventureDetailScreen({ adventure = sampleAdventure }: Adventure
             </button>
           </div>
 
-          {/* Summary + body */}
+          {/* Description */}
           <div className="mb-6">
             <h2 className="text-base font-semibold text-foreground mb-2">About this place</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              {adventure.summary}
+              {adventure.description}
             </p>
-            {adventure.body && (
-              <p className="text-sm text-muted-foreground leading-relaxed mt-2">
-                {adventure.body}
-              </p>
-            )}
           </div>
 
           {/* Location + mini-map */}
