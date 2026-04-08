@@ -42,6 +42,7 @@ export function PostScreen() {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [location, setLocation] = useState<{ name: string; lat: number; lng: number } | null>(null)
+  const [locationLabel, setLocationLabel] = useState("")
   const [locationPickerOpen, setLocationPickerOpen] = useState(false)
   const [category, setCategory] = useState<string | null>(null)
   const [visibility, setVisibility] = useState("Public")
@@ -189,19 +190,25 @@ export function PostScreen() {
             </div>
 
             {/* Location */}
-            <div>
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Location</label>
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block">Location</label>
+
+              {/* Coordinates picker */}
               <button
                 onClick={() => setLocationPickerOpen(true)}
                 className="w-full flex items-center gap-3 bg-secondary rounded-xl px-4 py-3 text-left"
               >
                 <MapPin className={`w-4 h-4 flex-shrink-0 ${location ? "text-primary" : "text-muted-foreground"}`} />
                 <span className={`text-sm flex-1 truncate ${location ? "text-foreground font-medium" : "text-muted-foreground"}`}>
-                  {location ? location.name : "Add a location..."}
+                  {location ? `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}` : "Set coordinates..."}
                 </span>
                 {location ? (
                   <button
-                    onClick={(e) => { e.stopPropagation(); setLocation(null) }}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setLocation(null)
+                      setLocationLabel("")
+                    }}
                     className="w-5 h-5 rounded-full bg-muted-foreground/20 flex items-center justify-center flex-shrink-0"
                   >
                     <X className="w-3 h-3 text-foreground" />
@@ -210,6 +217,27 @@ export function PostScreen() {
                   <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                 )}
               </button>
+
+              {/* Location label — always visible, auto-filled when location is set */}
+              <div className="relative">
+                <input
+                  value={locationLabel}
+                  onChange={(e) => setLocationLabel(e.target.value)}
+                  placeholder="Location label (e.g. Columbia River Gorge, OR)"
+                  className="w-full bg-secondary rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none pr-10"
+                />
+                {locationLabel && (
+                  <button
+                    onClick={() => setLocationLabel("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-muted-foreground/20 flex items-center justify-center"
+                  >
+                    <X className="w-3 h-3 text-foreground" />
+                  </button>
+                )}
+              </div>
+              <p className="text-[11px] text-muted-foreground px-1">
+                This label appears below the title in the feed. Auto-filled from your pin, or write your own.
+              </p>
             </div>
 
             {/* Category */}
@@ -275,7 +303,12 @@ export function PostScreen() {
       <LocationPickerSheet
         open={locationPickerOpen}
         onClose={() => setLocationPickerOpen(false)}
-        onConfirm={(loc) => setLocation(loc)}
+        onConfirm={(loc) => {
+          setLocation(loc)
+          // Auto-fill the label with the resolved name, but only if
+          // the user hasn't already typed something custom
+          setLocationLabel((prev) => prev || loc.name)
+        }}
       />
 
       {/* Tab Bar */}
