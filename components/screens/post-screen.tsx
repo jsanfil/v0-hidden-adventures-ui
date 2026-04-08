@@ -5,7 +5,7 @@ import {
   ChevronLeft, X, Plus, ChevronRight,
   Mountain, Footprints, Waves, UtensilsCrossed,
   Building2, Gem, Leaf, Navigation,
-  Globe, Users, Lock, MapPin, ImagePlus,
+  Globe, Users, Lock, MapPin,
 } from "lucide-react"
 import { Home, Map, Bookmark, User } from "lucide-react"
 
@@ -160,12 +160,6 @@ export function PostScreen() {
                 <img src={photo} alt="" className="w-full h-full object-cover" />
               </div>
             ))}
-            <button
-              onClick={() => setStep("photos")}
-              className="w-16 h-16 rounded-xl border-2 border-dashed border-border bg-secondary flex-shrink-0 flex items-center justify-center"
-            >
-              <ImagePlus className="w-5 h-5 text-muted-foreground" />
-            </button>
           </div>
 
           <div className="px-5 pb-28 flex flex-col gap-5">
