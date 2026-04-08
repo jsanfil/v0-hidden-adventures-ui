@@ -216,14 +216,14 @@ export function PostScreen() {
                     <button
                       key={label}
                       onClick={() => setCategory(isActive ? null : label)}
-                      className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-medium transition-colors ${
+                      className={`flex items-center justify-start gap-3 px-4 py-3 rounded-xl border text-sm font-medium transition-colors h-12 ${
                         isActive
                           ? "bg-primary text-primary-foreground border-primary"
                           : "bg-secondary text-foreground border-transparent"
                       }`}
                     >
-                      <Icon className="w-4 h-4 flex-shrink-0" />
-                      {label}
+                      <Icon className="w-5 h-5 flex-shrink-0" />
+                      <span className="truncate">{label}</span>
                     </button>
                   )
                 })}
