@@ -8,6 +8,7 @@ import {
   Globe, Users, Lock, MapPin,
 } from "lucide-react"
 import { Home, Map, Bookmark, User } from "lucide-react"
+import { LocationPickerSheet } from "./location-picker-sheet"
 
 const categories = [
   { label: "Viewpoints", icon: Mountain },
@@ -40,7 +41,8 @@ export function PostScreen() {
   const [activePhoto, setActivePhoto] = useState(0)
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
-  const [location, setLocation] = useState("")
+  const [location, setLocation] = useState<{ name: string; lat: number; lng: number } | null>(null)
+  const [locationPickerOpen, setLocationPickerOpen] = useState(false)
   const [category, setCategory] = useState<string | null>(null)
   const [visibility, setVisibility] = useState("Public")
 
@@ -189,15 +191,25 @@ export function PostScreen() {
             {/* Location */}
             <div>
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Location</label>
-              <div className="relative">
-                <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="Add a location..."
-                  className="w-full bg-secondary rounded-xl pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none"
-                />
-              </div>
+              <button
+                onClick={() => setLocationPickerOpen(true)}
+                className="w-full flex items-center gap-3 bg-secondary rounded-xl px-4 py-3 text-left"
+              >
+                <MapPin className={`w-4 h-4 flex-shrink-0 ${location ? "text-primary" : "text-muted-foreground"}`} />
+                <span className={`text-sm flex-1 truncate ${location ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+                  {location ? location.name : "Add a location..."}
+                </span>
+                {location ? (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setLocation(null) }}
+                    className="w-5 h-5 rounded-full bg-muted-foreground/20 flex items-center justify-center flex-shrink-0"
+                  >
+                    <X className="w-3 h-3 text-foreground" />
+                  </button>
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                )}
+              </button>
             </div>
 
             {/* Category */}
@@ -258,6 +270,13 @@ export function PostScreen() {
           </div>
         </div>
       )}
+
+      {/* Location Picker Sheet */}
+      <LocationPickerSheet
+        open={locationPickerOpen}
+        onClose={() => setLocationPickerOpen(false)}
+        onConfirm={(loc) => setLocation(loc)}
+      />
 
       {/* Tab Bar */}
       <div className="absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border">
