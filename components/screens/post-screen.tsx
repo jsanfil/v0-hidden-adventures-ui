@@ -53,7 +53,7 @@ export function PostScreen() {
   }
 
   return (
-    <div className="relative w-full h-full bg-background flex flex-col">
+    <div className="relative w-full h-full bg-background flex flex-col overflow-hidden">
       {/* Status Bar */}
       <div className="h-14 flex-shrink-0" />
 
