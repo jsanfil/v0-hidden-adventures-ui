@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import dynamic from "next/dynamic"
 import {
   MapPin, Navigation, Search, X, Loader2,
   ChevronRight, Map, CheckCircle2, ChevronLeft,
@@ -39,46 +40,12 @@ function searchPlaces(query: string) {
   )
 }
 
-function StaticMapPreview({ lat, lng }: { lat: number; lng: number }) {
-  const zoom = 13
-  const n = Math.pow(2, zoom)
-  const xTile = Math.floor(((lng + 180) / 360) * n)
-  const yTile = Math.floor(
-    ((1 - Math.log(Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180)) / Math.PI) / 2) * n
-  )
-
-  return (
-    <div className="relative w-full h-full overflow-hidden rounded-2xl bg-muted">
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div
-          className="grid"
-          style={{ gridTemplateColumns: "repeat(3, 256px)", gridTemplateRows: "repeat(3, 256px)" }}
-        >
-          {[-1, 0, 1].map((dy) =>
-            [-1, 0, 1].map((dx) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={`${dx},${dy}`}
-                src={`https://tile.openstreetmap.org/${zoom}/${xTile + dx}/${yTile + dy}.png`}
-                alt=""
-                width={256}
-                height={256}
-                crossOrigin="anonymous"
-              />
-            ))
-          )}
-        </div>
-      </div>
-      {/* Centered pin */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="flex flex-col items-center -translate-y-4">
-          <MapPin className="w-8 h-8 text-primary drop-shadow-lg" fill="currentColor" />
-          <div className="w-2 h-2 rounded-full bg-primary/40 blur-sm -mt-1" />
-        </div>
-      </div>
-    </div>
-  )
-}
+// Dynamically import the map to avoid SSR issues with Leaflet
+const PinDropMap = dynamic(() => import("../pin-drop-map"), { ssr: false, loading: () => (
+  <div className="w-full h-full rounded-2xl bg-secondary flex items-center justify-center">
+    <Loader2 className="w-5 h-5 text-muted-foreground animate-spin" />
+  </div>
+) })
 
 export function LocationPickerSheet({ open, onClose, onConfirm }: LocationPickerSheetProps) {
   const [mode, setMode] = useState<LocationMode>("options")
@@ -86,7 +53,7 @@ export function LocationPickerSheet({ open, onClose, onConfirm }: LocationPicker
   const [searchResults, setSearchResults] = useState<typeof mockPlaces>([])
   const [gpsState, setGpsState] = useState<"idle" | "loading" | "done" | "error">("idle")
   const [gpsResult, setGpsResult] = useState<ResolvedLocation | null>(null)
-  const [pinLocation] = useState<ResolvedLocation>({
+  const [pinLocation, setPinLocation] = useState<ResolvedLocation>({
     name: "Yosemite National Park",
     lat: 37.8651,
     lng: -119.5383,
@@ -354,10 +321,17 @@ export function LocationPickerSheet({ open, onClose, onConfirm }: LocationPicker
           {/* Pin Mode */}
           {mode === "pin" && (
             <div className="flex flex-col h-full">
-              <div className="flex-1 px-5 pt-3 pb-3" style={{ height: 220 }}>
-                <StaticMapPreview lat={pinLocation.lat} lng={pinLocation.lng} />
+              <div className="flex-1 px-5 pt-3 pb-3 min-h-0" style={{ height: 240 }}>
+                <PinDropMap
+                  lat={pinLocation.lat}
+                  lng={pinLocation.lng}
+                  onPinChange={(lat, lng) =>
+                    setPinLocation({ name: `${lat.toFixed(4)}, ${lng.toFixed(4)}`, lat, lng })
+                  }
+                />
               </div>
               <div className="px-5 pb-8 flex-shrink-0">
+                <p className="text-xs text-muted-foreground text-center mb-3">Tap anywhere on the map to move the pin</p>
                 <div className="flex items-center gap-3 p-4 bg-secondary rounded-2xl">
                   <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
                   <div className="flex-1 min-w-0">
