@@ -382,11 +382,11 @@ export function MapExploreScreen() {
       {/* Bottom Sheet - Draggable */}
       <div 
         ref={sheetRef}
-        className={`absolute bottom-0 left-0 right-0 bg-card rounded-t-3xl shadow-2xl transition-all duration-300 ease-out ${getSheetHeight()} ${selectedAdventure ? "translate-y-full" : ""}`}
+        className={`absolute bottom-0 left-0 right-0 bg-card rounded-t-3xl shadow-2xl transition-all duration-300 ease-out flex flex-col ${getSheetHeight()} ${selectedAdventure ? "translate-y-full" : ""}`}
       >
         {/* Drag Handle */}
         <div 
-          className="flex justify-center py-3 cursor-grab active:cursor-grabbing touch-none"
+          className="flex justify-center py-3 cursor-grab active:cursor-grabbing touch-none flex-shrink-0"
           onTouchStart={handleDragStart}
           onTouchEnd={handleDragEnd}
           onMouseDown={handleDragStart}
@@ -396,7 +396,7 @@ export function MapExploreScreen() {
         </div>
         
         {/* Sheet Header */}
-        <div className="px-5 pb-2 flex items-center justify-between">
+        <div className="px-5 pb-2 flex items-center justify-between flex-shrink-0">
           <div>
             <h2 className="text-base font-semibold text-foreground">Nearby Adventures</h2>
             <p className="text-xs text-muted-foreground">{filteredAdventures.length} places within 25 miles</p>
@@ -410,7 +410,7 @@ export function MapExploreScreen() {
         </div>
 
         {/* Category Filter Pills - inside the sheet */}
-        <div className="overflow-x-auto scrollbar-hide px-5 pb-3">
+        <div className="overflow-x-auto scrollbar-hide px-5 pb-3 flex-shrink-0">
           <div className="flex gap-2 w-max">
             {categories.map(({ label, icon: Icon }) => {
               const isActive = activeCategory === label
@@ -434,7 +434,7 @@ export function MapExploreScreen() {
 
         {/* Adventure Cards - Horizontal scroll in peek, vertical in expanded */}
         {sheetState === "expanded" ? (
-          <div className="flex-1 overflow-y-auto px-5 pb-24">
+          <div className="flex-1 overflow-y-auto px-5 pb-4">
             <div className="space-y-3">
               {filteredAdventures.map((adventure) => (
                 <button
@@ -462,7 +462,7 @@ export function MapExploreScreen() {
             </div>
           </div>
         ) : (
-          <div className="flex gap-3 overflow-x-auto px-5 pb-4 scrollbar-hide">
+          <div className="flex-1 flex gap-3 overflow-x-auto px-5 pb-4 scrollbar-hide">
             {filteredAdventures.map((adventure) => (
               <button
                 key={adventure.id}
@@ -495,7 +495,7 @@ export function MapExploreScreen() {
         )}
         
         {/* Tab Bar */}
-        <div className="absolute bottom-0 left-0 right-0 bg-card border-t border-border">
+        <div className="bg-card border-t border-border flex-shrink-0">
           <div className="flex items-end justify-around pt-2 pb-7 px-2">
             <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
               <Home className="w-6 h-6 text-muted-foreground" />
