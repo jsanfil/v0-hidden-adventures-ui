@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Map, Bookmark, User, LogOut, MapPin, Star, Heart, Plus } from "lucide-react"
+import { Home, Map, Bookmark, User, LogOut, MapPin, Star, Heart, Plus, ChevronRight, Eye } from "lucide-react"
 import { useState } from "react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
@@ -14,9 +14,18 @@ const currentUser = {
   bio: "",
   stats: {
     adventures: 20,
-    saved: 0,
+    likesReceived: 87,
+    views: 1240,
     sidekicks: 10,
   },
+  sidekicksList: [
+    { id: "1", name: "Sarah", initials: "S" },
+    { id: "2", name: "Mike", initials: "M" },
+    { id: "3", name: "Alex", initials: "A" },
+    { id: "4", name: "Jordan", initials: "J" },
+    { id: "5", name: "Casey", initials: "C" },
+    { id: "6", name: "Taylor", initials: "T" },
+  ],
 }
 
 // Mock adventures for the user
@@ -93,22 +102,59 @@ export function ProfileScreen({ onNavigateToSidekicks }: ProfileScreenProps) {
         {/* Stats */}
         <div className="px-5 pb-4">
           <div className="flex gap-3">
-            <div className="flex-1 bg-card rounded-xl p-4 border border-border">
-              <p className="text-2xl font-semibold text-foreground">{currentUser.stats.adventures}</p>
-              <p className="text-sm text-muted-foreground">Adventures</p>
+            <div className="flex-1 bg-card rounded-xl p-3 border border-border text-center">
+              <p className="text-xl font-semibold text-foreground">{currentUser.stats.adventures}</p>
+              <p className="text-xs text-muted-foreground mt-1">Adventures</p>
             </div>
-            <div className="flex-1 bg-card rounded-xl p-4 border border-border">
-              <p className="text-2xl font-semibold text-foreground">{currentUser.stats.saved}</p>
-              <p className="text-sm text-muted-foreground">Saved</p>
+            <div className="flex-1 bg-card rounded-xl p-3 border border-border text-center">
+              <p className="text-xl font-semibold text-foreground">{currentUser.stats.likesReceived}</p>
+              <p className="text-xs text-muted-foreground mt-1">Likes Received</p>
             </div>
-            <button 
-              onClick={onNavigateToSidekicks}
-              className="flex-1 bg-card rounded-xl p-4 border border-border text-left hover:bg-secondary/50 transition-colors"
-            >
-              <p className="text-2xl font-semibold text-foreground">{currentUser.stats.sidekicks}</p>
-              <p className="text-sm text-muted-foreground">Sidekicks</p>
-            </button>
+            <div className="flex-1 bg-card rounded-xl p-3 border border-border text-center">
+              <p className="text-xl font-semibold text-foreground">{currentUser.stats.views}</p>
+              <p className="text-xs text-muted-foreground mt-1">Views</p>
+            </div>
           </div>
+        </div>
+
+        {/* Sidekicks Row */}
+        <div className="px-5 pb-4">
+          <button 
+            onClick={onNavigateToSidekicks}
+            className="w-full flex items-center justify-between bg-card rounded-xl p-4 border border-border hover:bg-secondary/50 transition-colors"
+          >
+            <div className="flex items-center gap-3 flex-1">
+              {/* Avatar Stack */}
+              <div className="relative flex">
+                {currentUser.sidekicksList.slice(0, 5).map((sidekick, idx) => (
+                  <Avatar 
+                    key={sidekick.id}
+                    className="w-8 h-8 border-2 border-background"
+                    style={{ marginLeft: idx > 0 ? "-8px" : "0" }}
+                  >
+                    <AvatarImage src={`/images/avatar-${sidekick.initials.toLowerCase()}.jpg`} alt={sidekick.name} />
+                    <AvatarFallback className="bg-primary/20 text-primary text-xs font-semibold">
+                      {sidekick.initials}
+                    </AvatarFallback>
+                  </Avatar>
+                ))}
+                {currentUser.sidekicksList.length > 5 && (
+                  <div className="w-8 h-8 rounded-full bg-muted border-2 border-background ml-[-8px] flex items-center justify-center text-xs font-semibold text-muted-foreground">
+                    +{currentUser.sidekicksList.length - 5}
+                  </div>
+                )}
+              </div>
+
+              {/* Text */}
+              <div className="text-left">
+                <p className="font-semibold text-foreground">{currentUser.stats.sidekicks} Sidekicks</p>
+                <p className="text-xs text-muted-foreground">Manage your crew</p>
+              </div>
+            </div>
+
+            {/* Chevron */}
+            <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+          </button>
         </div>
 
         {/* Shared Adventures */}
