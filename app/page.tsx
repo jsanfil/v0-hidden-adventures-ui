@@ -9,16 +9,20 @@ import { MapExploreScreen } from "@/components/screens/map-explore-screen"
 import { AdventureDetailScreen } from "@/components/screens/adventure-detail-screen"
 import { SavedScreen } from "@/components/screens/saved-screen"
 import { PostScreen } from "@/components/screens/post-screen"
+import { ProfileScreen } from "@/components/screens/profile-screen"
+import { SidekicksScreen } from "@/components/screens/sidekicks-screen"
 import { cn } from "@/lib/utils"
 
 const screens = [
   { id: "welcome", name: "Welcome", component: WelcomeScreen, color: "from-stone-700 to-stone-900" },
-  { id: "profile", name: "Profile Setup", component: ProfileSetupScreen, color: "from-slate-500 to-slate-700" },
+  { id: "profile-setup", name: "Profile Setup", component: ProfileSetupScreen, color: "from-slate-500 to-slate-700" },
   { id: "home", name: "Home Feed", component: HomeFeedScreen, color: "from-emerald-700 to-emerald-900" },
   { id: "map", name: "Map Explore", component: MapExploreScreen, color: "from-teal-600 to-teal-800" },
   { id: "saved", name: "Saved", component: SavedScreen, color: "from-amber-600 to-amber-800" },
   { id: "post", name: "Post Adventure", component: PostScreen, color: "from-green-700 to-green-900" },
   { id: "detail", name: "Adventure Detail", component: AdventureDetailScreen, color: "from-sky-700 to-sky-900" },
+  { id: "profile", name: "Profile", component: ProfileScreen, color: "from-teal-700 to-teal-900" },
+  { id: "sidekicks", name: "Sidekicks", component: SidekicksScreen, color: "from-emerald-600 to-emerald-800" },
 ]
 
 export default function Page() {
@@ -26,6 +30,21 @@ export default function Page() {
 
   const activeScreenData = screens.find(s => s.id === activeScreen)
   const ActiveComponent = activeScreenData?.component ?? WelcomeScreen
+
+  // Navigation handlers for screens that need to push/pop
+  const handleNavigateToSidekicks = () => setActiveScreen("sidekicks")
+  const handleBackFromSidekicks = () => setActiveScreen("profile")
+
+  // Create props for components that need navigation
+  const getComponentProps = (screenId: string) => {
+    if (screenId === "profile") {
+      return { onNavigateToSidekicks: handleNavigateToSidekicks }
+    }
+    if (screenId === "sidekicks") {
+      return { onBack: handleBackFromSidekicks }
+    }
+    return {}
+  }
 
   return (
     <main className="min-h-screen bg-[#f5f3ef]">
@@ -85,7 +104,7 @@ export default function Page() {
       {/* iPhone Preview — live component, isolated */}
       <div className="flex justify-center pb-20">
         <IPhoneFrame className="transform scale-[0.85] md:scale-100 origin-top">
-          <ActiveComponent />
+          <ActiveComponent {...getComponentProps(activeScreen)} />
         </IPhoneFrame>
       </div>
 
