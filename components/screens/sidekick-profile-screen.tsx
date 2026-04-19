@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronLeft, MapPin, Star, Heart, Bookmark, Home, Map, Plus, User } from "lucide-react"
+import { ChevronLeft, MapPin, Star, Heart, Bookmark } from "lucide-react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 
@@ -100,7 +100,7 @@ export function SidekickProfileScreen({ user: propUser, onBack }: SidekickProfil
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto pb-24">
+      <div className="flex-1 overflow-y-auto pb-8">
         {/* Bio */}
         <div className="px-5 py-4">
           <p className="text-muted-foreground text-sm">
@@ -182,33 +182,6 @@ export function SidekickProfileScreen({ user: propUser, onBack }: SidekickProfil
         </div>
       </div>
 
-      {/* Tab Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-card border-t border-border">
-        <div className="flex items-end justify-around pt-2 pb-7 px-2">
-          <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
-            <Home className="w-6 h-6 text-muted-foreground" />
-            <span className="text-[10px] font-medium text-muted-foreground">Home</span>
-          </button>
-          <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
-            <Map className="w-6 h-6 text-muted-foreground" />
-            <span className="text-[10px] font-medium text-muted-foreground">Explore</span>
-          </button>
-          <div className="flex flex-col items-center gap-0.5 px-3 -mt-5">
-            <button className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg">
-              <Plus className="w-6 h-6 text-primary-foreground" strokeWidth={2.5} />
-            </button>
-            <span className="text-[10px] font-medium text-muted-foreground mt-0.5">Post</span>
-          </div>
-          <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
-            <Bookmark className="w-6 h-6 text-muted-foreground" />
-            <span className="text-[10px] font-medium text-muted-foreground">Saved</span>
-          </button>
-          <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
-            <User className="w-6 h-6 text-muted-foreground" />
-            <span className="text-[10px] font-medium text-muted-foreground">Profile</span>
-          </button>
-        </div>
-      </div>
     </div>
   )
 }
