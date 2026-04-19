@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Map, Bookmark, User, LogOut, MapPin, Star, Heart, Plus, ChevronRight, Eye } from "lucide-react"
+import { Home, Map, Bookmark, User, LogOut, MapPin, Star, Heart, Plus, ChevronRight, ChevronLeft } from "lucide-react"
 import { useState } from "react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
@@ -58,9 +58,10 @@ const userAdventures = [
 
 interface ProfileScreenProps {
   onNavigateToSidekicks?: () => void
+  onBack?: () => void
 }
 
-export function ProfileScreen({ onNavigateToSidekicks }: ProfileScreenProps) {
+export function ProfileScreen({ onNavigateToSidekicks, onBack }: ProfileScreenProps) {
   const [activeTab, setActiveTab] = useState<"profile">("profile")
 
   return (
@@ -68,7 +69,17 @@ export function ProfileScreen({ onNavigateToSidekicks }: ProfileScreenProps) {
       {/* Status Bar Space */}
       <div className="h-14 flex-shrink-0 bg-[#5a8a7a]" />
 
-      {/* Profile Header */}
+      {/* Back Button Header - Standalone */}
+      <div className="bg-[#5a8a7a] px-5 pt-3 pb-4 flex-shrink-0">
+        <button 
+          onClick={onBack}
+          className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
+        >
+          <ChevronLeft className="w-5 h-5 text-white" />
+        </button>
+      </div>
+
+      {/* Profile Header with Avatar */}
       <div className="bg-[#5a8a7a] px-5 pb-6 flex-shrink-0">
         <div className="flex justify-between items-start">
           <Avatar className="w-20 h-20 border-4 border-white/20">
