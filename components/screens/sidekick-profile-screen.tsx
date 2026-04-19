@@ -78,10 +78,9 @@ export function SidekickProfileScreen({ user: propUser, onBack }: SidekickProfil
       <div className="bg-[#5a8a7a] px-5 py-3 flex-shrink-0">
         <button 
           onClick={onBack}
-          className="flex items-center gap-2 text-white/90 hover:text-white"
+          className="w-10 h-10 flex items-center justify-center text-white/90 hover:text-white"
         >
           <ChevronLeft className="w-6 h-6" />
-          <span className="text-sm font-medium">Back</span>
         </button>
       </div>
 
