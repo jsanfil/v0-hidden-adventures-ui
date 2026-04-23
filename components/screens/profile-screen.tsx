@@ -69,24 +69,29 @@ export function ProfileScreen({ onNavigateToSidekicks }: ProfileScreenProps) {
       <div className="h-14 flex-shrink-0 bg-[#5a8a7a]" />
 
       {/* Profile Header */}
-      <div className="bg-[#5a8a7a] px-5 pb-6 flex-shrink-0">
-        <div className="flex justify-between items-start">
-          <Avatar className="w-20 h-20 border-4 border-white/20">
+      <div className="bg-[#5a8a7a] px-5 pb-8 flex-shrink-0">
+        <div className="flex justify-between items-start mb-4">
+          <div />
+          <button className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+            <LogOut className="w-5 h-5 text-white" />
+          </button>
+        </div>
+
+        <div className="flex items-start gap-4">
+          <Avatar className="w-20 h-20 border-4 border-white/20 flex-shrink-0">
             <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
             <AvatarFallback className="bg-[#4a7a6a] text-white text-2xl">
               {currentUser.name.split(" ").map(n => n[0]).join("")}
             </AvatarFallback>
           </Avatar>
-          <button className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mt-1">
-            <LogOut className="w-5 h-5 text-white" />
-          </button>
-        </div>
-
-        <h1 className="text-2xl font-semibold text-white mt-4">{currentUser.name}</h1>
-        <p className="text-white/80 text-sm mt-0.5">{currentUser.username}</p>
-        <div className="flex items-center gap-1.5 mt-2 text-white/70 text-sm">
-          <MapPin className="w-4 h-4" />
-          <span>{currentUser.location}</span>
+          <div className="flex-1 min-w-0 pt-1">
+            <h1 className="text-2xl font-semibold text-white">{currentUser.name}</h1>
+            <p className="text-white/80 text-sm mt-0.5">{currentUser.username}</p>
+            <div className="flex items-center gap-1.5 mt-2 text-white/70 text-sm">
+              <MapPin className="w-4 h-4 flex-shrink-0" />
+              <span>{currentUser.location}</span>
+            </div>
+          </div>
         </div>
       </div>
 

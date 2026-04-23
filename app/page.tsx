@@ -11,6 +11,7 @@ import { SavedScreen } from "@/components/screens/saved-screen"
 import { PostScreen } from "@/components/screens/post-screen"
 import { ProfileScreen } from "@/components/screens/profile-screen"
 import { SidekicksScreen } from "@/components/screens/sidekicks-screen"
+import { SidekickProfileScreen, type SidekickUser } from "@/components/screens/sidekick-profile-screen"
 import { cn } from "@/lib/utils"
 
 const screens = [
@@ -23,10 +24,12 @@ const screens = [
   { id: "detail", name: "Adventure Detail", component: AdventureDetailScreen, color: "from-sky-700 to-sky-900" },
   { id: "profile", name: "Profile", component: ProfileScreen, color: "from-teal-700 to-teal-900" },
   { id: "sidekicks", name: "Sidekicks", component: SidekicksScreen, color: "from-emerald-600 to-emerald-800" },
+  { id: "sidekick-profile", name: "Sidekick Profile", component: SidekickProfileScreen, color: "from-teal-600 to-teal-800" },
 ]
 
 export default function Page() {
   const [activeScreen, setActiveScreen] = useState("welcome")
+  const [selectedSidekick, setSelectedSidekick] = useState<SidekickUser | null>(null)
 
   const activeScreenData = screens.find(s => s.id === activeScreen)
   const ActiveComponent = activeScreenData?.component ?? WelcomeScreen
@@ -34,6 +37,11 @@ export default function Page() {
   // Navigation handlers for screens that need to push/pop
   const handleNavigateToSidekicks = () => setActiveScreen("sidekicks")
   const handleBackFromSidekicks = () => setActiveScreen("profile")
+  const handleSelectSidekick = (user: SidekickUser) => {
+    setSelectedSidekick(user)
+    setActiveScreen("sidekick-profile")
+  }
+  const handleBackFromSidekickProfile = () => setActiveScreen("sidekicks")
 
   // Create props for components that need navigation
   const getComponentProps = (screenId: string) => {
@@ -41,7 +49,10 @@ export default function Page() {
       return { onNavigateToSidekicks: handleNavigateToSidekicks }
     }
     if (screenId === "sidekicks") {
-      return { onBack: handleBackFromSidekicks }
+      return { onBack: handleBackFromSidekicks, onSelectUser: handleSelectSidekick }
+    }
+    if (screenId === "sidekick-profile") {
+      return { user: selectedSidekick, onBack: handleBackFromSidekickProfile }
     }
     return {}
   }

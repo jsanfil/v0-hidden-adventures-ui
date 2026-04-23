@@ -4,6 +4,7 @@ import { ChevronLeft, Search, UserPlus, UserMinus, Check, X } from "lucide-react
 import { useState, useMemo } from "react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
+import type { SidekickUser } from "./sidekick-profile-screen"
 
 // Mock data for sidekicks (users you've added)
 const mySidekicks = [
@@ -33,9 +34,10 @@ type Tab = "my-sidekicks" | "find-users"
 
 interface SidekicksScreenProps {
   onBack?: () => void
+  onSelectUser?: (user: SidekickUser) => void
 }
 
-export function SidekicksScreen({ onBack }: SidekicksScreenProps) {
+export function SidekicksScreen({ onBack, onSelectUser }: SidekicksScreenProps) {
   const [activeTab, setActiveTab] = useState<Tab>("my-sidekicks")
   const [searchQuery, setSearchQuery] = useState("")
   const [sidekickIds, setSidekickIds] = useState<Set<string>>(new Set(mySidekicks.map(s => s.id)))
@@ -172,22 +174,34 @@ export function SidekicksScreen({ onBack }: SidekicksScreenProps) {
                 <div 
                   key={user.id} 
                   className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${
-                    isPendingRemoval ? "bg-destructive/10" : "bg-card border border-border"
+                    isPendingRemoval ? "bg-destructive/10" : "bg-card border border-border hover:bg-secondary/50"
                   }`}
                 >
-                  <Avatar className="w-12 h-12">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="bg-primary/20 text-primary text-sm">
-                      {user.name.split(" ").map(n => n[0]).join("")}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div 
+                    className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
+                    onClick={() => onSelectUser?.({
+                      id: user.id,
+                      name: user.name,
+                      username: user.username,
+                      avatar: user.avatar,
+                      location: user.location,
+                      adventures: user.adventures,
+                    })}
+                  >
+                    <Avatar className="w-12 h-12 flex-shrink-0">
+                      <AvatarImage src={user.avatar} alt={user.name} />
+                      <AvatarFallback className="bg-primary/20 text-primary text-sm">
+                        {user.name.split(" ").map(n => n[0]).join("")}
+                      </AvatarFallback>
+                    </Avatar>
 
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-foreground text-sm truncate">{user.name}</p>
-                    <p className="text-xs text-muted-foreground truncate">{user.username}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {user.location} &middot; {user.adventures} adventures
-                    </p>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-foreground text-sm truncate">{user.name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user.username}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {user.location} &middot; {user.adventures} adventures
+                      </p>
+                    </div>
                   </div>
 
                   {isPendingRemoval ? (
