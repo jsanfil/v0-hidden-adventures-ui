@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Map, Bookmark, User, Search, MapPin, Star, Navigation, Globe, Users, Lock, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Plus, X, ChevronRight, Locate, SlidersHorizontal, Check, Heart } from "lucide-react"
+import { Home, Map, Bookmark, User, Search, MapPin, Star, Navigation, Globe, Users, Lock, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Plus, X, ChevronRight, Locate, SlidersHorizontal, Check, Heart, Compass } from "lucide-react"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 import { useState, useRef } from "react"
 import type { LucideIcon } from "lucide-react"
@@ -512,8 +512,8 @@ export function MapExploreScreen() {
               <span className="text-[10px] font-medium text-muted-foreground mt-0.5">Post</span>
             </div>
             <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
-              <Bookmark className="w-6 h-6 text-muted-foreground" />
-              <span className="text-[10px] font-medium text-muted-foreground">Saved</span>
+              <Compass className="w-6 h-6 text-muted-foreground" />
+              <span className="text-[10px] font-medium text-muted-foreground">Discover</span>
             </button>
             <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
               <User className="w-6 h-6 text-muted-foreground" />

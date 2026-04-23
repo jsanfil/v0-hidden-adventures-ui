@@ -7,7 +7,7 @@ import {
   Building2, Gem, Leaf, Navigation,
   Globe, Users, Lock, MapPin,
 } from "lucide-react"
-import { Home, Map, Bookmark, User } from "lucide-react"
+import { Home, Map, User, Compass } from "lucide-react"
 import { LocationPickerSheet } from "./location-picker-sheet"
 
 const categories = [
@@ -323,8 +323,8 @@ export function PostScreen() {
             <span className="text-[10px] font-medium text-muted-foreground">Explore</span>
           </button>
           <button className="flex flex-col items-center gap-0.5 px-4 py-1.5">
-            <Bookmark className="w-6 h-6 text-muted-foreground" />
-            <span className="text-[10px] font-medium text-muted-foreground">Saved</span>
+            <Compass className="w-6 h-6 text-muted-foreground" />
+            <span className="text-[10px] font-medium text-muted-foreground">Discover</span>
           </button>
           <button className="flex flex-col items-center gap-0.5 px-4 py-1.5">
             <User className="w-6 h-6 text-muted-foreground" />
