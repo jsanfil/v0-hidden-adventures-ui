@@ -7,7 +7,7 @@ import {
   Star,
   MapPin,
   Search,
-  Compass,
+  Telescope,
   ChevronRight,
   Heart,
   X,
@@ -352,7 +352,7 @@ export function DiscoverScreen() {
             <span className="text-[10px] font-medium text-muted-foreground mt-0.5">Post</span>
           </div>
           <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
-            <Compass className="w-6 h-6 text-primary" fill="currentColor" />
+            <Telescope className="w-6 h-6 text-primary" fill="currentColor" />
             <span className="text-[10px] font-medium text-primary">Discover</span>
           </button>
           <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">

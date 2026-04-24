@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Map, Bookmark, User, Search, Bell, MapPin, Heart, Star, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Navigation, Globe, Users, Lock, Plus, Compass } from "lucide-react"
+import { Home, Map, Bookmark, User, Search, Bell, MapPin, Heart, Star, Mountain, Footprints, Waves, UtensilsCrossed, Building2, Gem, Leaf, Navigation, Globe, Users, Lock, Plus, Telescope } from "lucide-react"
 import { useState } from "react"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 
@@ -218,7 +218,7 @@ export function HomeFeedScreen() {
             <span className="text-[10px] font-medium text-muted-foreground mt-0.5">Post</span>
           </div>
           <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
-            <Compass className="w-6 h-6 text-muted-foreground" />
+            <Telescope className="w-6 h-6 text-muted-foreground" />
             <span className="text-[10px] font-medium text-muted-foreground">Discover</span>
           </button>
           <button className="flex flex-col items-center gap-0.5 px-3 py-1.5">
