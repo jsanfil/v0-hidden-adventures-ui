@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Heart,
   X,
+  Plus,
 } from "lucide-react"
 import { useState } from "react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
