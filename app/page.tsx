@@ -7,7 +7,7 @@ import { ProfileSetupScreen } from "@/components/screens/profile-setup-screen"
 import { HomeFeedScreen } from "@/components/screens/home-feed-screen"
 import { MapExploreScreen } from "@/components/screens/map-explore-screen"
 import { AdventureDetailScreen } from "@/components/screens/adventure-detail-screen"
-import { SavedScreen } from "@/components/screens/saved-screen"
+import { DiscoverScreen } from "@/components/screens/discover-screen"
 import { PostScreen } from "@/components/screens/post-screen"
 import { ProfileScreen } from "@/components/screens/profile-screen"
 import { SidekicksScreen } from "@/components/screens/sidekicks-screen"
@@ -19,7 +19,7 @@ const screens = [
   { id: "profile-setup", name: "Profile Setup", component: ProfileSetupScreen, color: "from-slate-500 to-slate-700" },
   { id: "home", name: "Home Feed", component: HomeFeedScreen, color: "from-emerald-700 to-emerald-900" },
   { id: "map", name: "Map Explore", component: MapExploreScreen, color: "from-teal-600 to-teal-800" },
-  { id: "saved", name: "Saved", component: SavedScreen, color: "from-amber-600 to-amber-800" },
+  { id: "discover", name: "Discover", component: DiscoverScreen, color: "from-amber-600 to-amber-800" },
   { id: "post", name: "Post Adventure", component: PostScreen, color: "from-green-700 to-green-900" },
   { id: "detail", name: "Adventure Detail", component: AdventureDetailScreen, color: "from-sky-700 to-sky-900" },
   { id: "profile", name: "Profile", component: ProfileScreen, color: "from-teal-700 to-teal-900" },
