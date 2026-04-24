@@ -310,7 +310,7 @@ export function DiscoverScreen() {
 
           {/* 1. Explore Adventurers */}
           <section>
-            <SectionHeader title="Explore Adventurers" onSeeAll={() => {}} />
+            <SectionHeader title="Explore Adventurers" />
             <div className="overflow-x-auto scrollbar-hide pl-5 pr-3">
               <div className="flex gap-3 w-max pr-2">
                 {explorers.map((c) => (
@@ -322,7 +322,7 @@ export function DiscoverScreen() {
 
           {/* 2. Popular Adventures */}
           <section>
-            <SectionHeader title="Popular Adventures" onSeeAll={() => {}} />
+            <SectionHeader title="Popular Adventures" />
             <div className="overflow-x-auto scrollbar-hide pl-5 pr-3">
               <div className="flex gap-3 w-max pr-2">
                 {popularAdventures.map((a) => (
