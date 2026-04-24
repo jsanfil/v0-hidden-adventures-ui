@@ -7,15 +7,7 @@ import {
   Star,
   MapPin,
   Search,
-  Mountain,
-  Footprints,
-  Waves,
-  UtensilsCrossed,
-  Building2,
-  Leaf,
-  Navigation,
   Compass,
-  Plus,
   ChevronRight,
   Heart,
   X,
@@ -26,19 +18,16 @@ import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
-const topCreators = [
+const explorers = [
   {
     id: "1",
     name: "Maya Reyes",
     handle: "@mayaexplores",
     avatar: "/images/avatar-sarah.jpg",
     location: "Portland, OR",
-    region: "Pacific Northwest",
-    bio: "Chasing waterfalls and secret swimming holes across the PNW.",
     adventureCount: 62,
-    topCategories: ["Waterfall Hikes", "Canyon", "Old Growth"],
+    topCategories: ["Waterfall Hikes", "Canyon"],
     coverImages: ["/images/hero-mountain.jpg", "/images/hidden-canyon.jpg"],
-    reason: "Top waterfall curator in the PNW",
   },
   {
     id: "2",
@@ -46,52 +35,20 @@ const topCreators = [
     handle: "@theo.outdoors",
     avatar: "/images/avatar-sarah.jpg",
     location: "Bend, OR",
-    region: "High Desert",
-    bio: "Volcanic terrain, lava tubes, and high-desert solitude.",
     adventureCount: 38,
-    topCategories: ["Viewpoints", "Geology", "Trails"],
+    topCategories: ["Viewpoints", "Geology"],
     coverImages: ["/images/scenic-overlook.jpg", "/images/trail-forest.jpg"],
-    reason: "Hidden gems off the beaten path",
   },
 ]
 
-const risingExplorers = [
-  {
-    id: "3",
-    name: "Priya Suresh",
-    handle: "@priyaroams",
-    avatar: "/images/avatar-sarah.jpg",
-    location: "Seattle, WA",
-    region: "Cascades",
-    bio: "Alpine lakes and wildflower meadows all summer long.",
-    adventureCount: 14,
-    topCategories: ["Alpine", "Trails", "Water Spots"],
-    coverImages: ["/images/swimming-hole.jpg"],
-    reason: "Rising star — 14 adventures this season",
-  },
-  {
-    id: "4",
-    name: "Lena Marsh",
-    handle: "@lenaonthecoast",
-    avatar: "/images/avatar-sarah.jpg",
-    location: "Astoria, OR",
-    region: "Oregon Coast",
-    bio: "Coastal cliffs, tide pools, and every sandy cove in between.",
-    adventureCount: 21,
-    topCategories: ["Coastal", "Viewpoints", "Nature"],
-    coverImages: ["/images/coastal-path.jpg"],
-    reason: "Best coastal coverage on the app",
-  },
-]
-
-const standoutAdventures = [
+const popularAdventures = [
   {
     images: ["/images/hero-mountain.jpg", "/images/scenic-overlook.jpg", "/images/trail-forest.jpg"],
     title: "Eagle Creek Trail to Tunnel Falls",
     location: "Columbia River Gorge, OR",
     category: "Waterfall Hike",
     rating: 4.9,
-    saves: 2847,
+    favorites: 3104,
     author: "Maya Reyes",
   },
   {
@@ -100,7 +57,7 @@ const standoutAdventures = [
     location: "Columbia River Gorge, OR",
     category: "Canyon",
     rating: 4.9,
-    saves: 3104,
+    favorites: 2847,
     author: "Maya Reyes",
   },
   {
@@ -109,41 +66,8 @@ const standoutAdventures = [
     location: "Willamette National Forest, OR",
     category: "Hidden Gem",
     rating: 4.8,
-    saves: 1523,
+    favorites: 1523,
     author: "Theo Nakamura",
-  },
-]
-
-const categories = [
-  { label: "Viewpoints", icon: Mountain },
-  { label: "Trails", icon: Footprints },
-  { label: "Water Spots", icon: Waves },
-  { label: "Food & Drink", icon: UtensilsCrossed },
-  { label: "Abandoned Places", icon: Building2 },
-  { label: "Nature Escapes", icon: Leaf },
-  { label: "Roadside Stops", icon: Navigation },
-]
-
-const destinationCreators = [
-  {
-    id: "5",
-    name: "Jordan Vela",
-    handle: "@jordanvela",
-    avatar: "/images/avatar-sarah.jpg",
-    location: "Moab, UT",
-    adventureCount: 41,
-    coverImages: ["/images/scenic-overlook.jpg"],
-    topCategories: ["Canyons", "Desert", "Rock Climbing"],
-  },
-  {
-    id: "6",
-    name: "Sam Holt",
-    handle: "@samholt.hikes",
-    avatar: "/images/avatar-sarah.jpg",
-    location: "Flagstaff, AZ",
-    adventureCount: 29,
-    coverImages: ["/images/trail-forest.jpg"],
-    topCategories: ["Trails", "Geology", "Viewpoints"],
   },
 ]
 
@@ -162,14 +86,14 @@ function SectionHeader({ title, onSeeAll }: { title: string; onSeeAll?: () => vo
   )
 }
 
-function CreatorCard({ creator }: { creator: typeof topCreators[0] }) {
+function CreatorCard({ explorer }: { explorer: typeof explorers[0] }) {
   return (
     <div className="w-64 flex-shrink-0 bg-card rounded-2xl border border-border overflow-hidden shadow-sm">
       {/* Cover collage */}
       <div className="h-28 relative overflow-hidden">
         <AdventureImageCarousel
-          images={creator.coverImages}
-          alt={creator.name}
+          images={explorer.coverImages}
+          alt={explorer.name}
           aspectRatio="aspect-[16/7]"
           dotsPosition="below"
         />
@@ -177,9 +101,9 @@ function CreatorCard({ creator }: { creator: typeof topCreators[0] }) {
         {/* Avatar overlapping bottom edge */}
         <div className="absolute -bottom-6 left-4">
           <Avatar className="w-12 h-12 border-2 border-card">
-            <AvatarImage src={creator.avatar} alt={creator.name} />
+            <AvatarImage src={explorer.avatar} alt={explorer.name} />
             <AvatarFallback className="bg-primary/20 text-primary text-sm font-semibold">
-              {creator.name.split(" ").map((n) => n[0]).join("")}
+              {explorer.name.split(" ").map((n) => n[0]).join("")}
             </AvatarFallback>
           </Avatar>
         </div>
@@ -189,71 +113,34 @@ function CreatorCard({ creator }: { creator: typeof topCreators[0] }) {
       <div className="pt-8 pb-3 px-4">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="font-semibold text-sm text-foreground leading-tight">{creator.name}</p>
-            <p className="text-xs text-muted-foreground">{creator.handle}</p>
+            <p className="font-semibold text-sm text-foreground leading-tight">{explorer.name}</p>
+            <p className="text-xs text-muted-foreground">{explorer.handle}</p>
           </div>
           <span className="text-xs font-medium text-muted-foreground bg-secondary px-2 py-0.5 rounded-full flex-shrink-0">
-            {creator.adventureCount} trips
+            {explorer.adventureCount} trips
           </span>
         </div>
 
         {/* Location */}
         <div className="flex items-center gap-1 mt-1.5 text-muted-foreground">
           <MapPin className="w-3 h-3 flex-shrink-0" />
-          <span className="text-xs">{creator.location}</span>
+          <span className="text-xs">{explorer.location}</span>
         </div>
-
-        {/* Bio */}
-        {creator.bio && (
-          <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2 leading-relaxed">{creator.bio}</p>
-        )}
 
         {/* Top categories */}
         <div className="flex flex-wrap gap-1 mt-2">
-          {creator.topCategories.slice(0, 3).map((cat) => (
+          {explorer.topCategories.slice(0, 2).map((cat) => (
             <span key={cat} className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
               {cat}
             </span>
           ))}
         </div>
-
-        {/* Reason chip */}
-        <div className="mt-2 flex items-center gap-1 text-[10px] text-accent font-medium">
-          <Star className="w-3 h-3 fill-accent text-accent flex-shrink-0" />
-          {creator.reason}
-        </div>
-
-        {/* CTA */}
-        <button className="mt-3 w-full py-1.5 rounded-xl border border-primary text-primary text-xs font-semibold hover:bg-primary/5 transition-colors">
-          View Profile
-        </button>
       </div>
     </div>
   )
 }
 
-function RisingExplorerRow({ creator }: { creator: typeof risingExplorers[0] }) {
-  return (
-    <div className="flex items-center gap-3 px-5 py-2.5 bg-card rounded-2xl border border-border shadow-sm">
-      <Avatar className="w-11 h-11 flex-shrink-0">
-        <AvatarImage src={creator.avatar} alt={creator.name} />
-        <AvatarFallback className="bg-primary/20 text-primary text-sm font-semibold">
-          {creator.name.split(" ").map((n) => n[0]).join("")}
-        </AvatarFallback>
-      </Avatar>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-foreground leading-tight">{creator.name}</p>
-        <p className="text-xs text-muted-foreground">{creator.handle} · {creator.location}</p>
-        <p className="text-[10px] text-accent font-medium mt-0.5">{creator.reason}</p>
-      </div>
-      <button className="flex-shrink-0 px-3 py-1.5 rounded-xl border border-primary text-primary text-xs font-semibold hover:bg-primary/5 transition-colors">
-        View
-      </button>
-    </div>
-  )
-}
-
-function StandoutAdventureCard({ adventure }: { adventure: typeof standoutAdventures[0] }) {
+function StandoutAdventureCard({ adventure }: { adventure: typeof popularAdventures[0] }) {
   return (
     <div className="w-56 flex-shrink-0 rounded-2xl overflow-hidden bg-card shadow-sm border border-border">
       <div className="relative">
@@ -287,80 +174,21 @@ function StandoutAdventureCard({ adventure }: { adventure: typeof standoutAdvent
         <p className="text-[10px] text-muted-foreground">by {adventure.author}</p>
         <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
           <Heart className="w-3 h-3" />
-          <span>{adventure.saves.toLocaleString()}</span>
+          <span>{adventure.favorites.toLocaleString()}</span>
         </div>
       </div>
     </div>
   )
 }
-
-function CategoryGrid() {
-  const [active, setActive] = useState<string | null>(null)
-  return (
-    <div className="px-5 grid grid-cols-4 gap-2">
-      {categories.map(({ label, icon: Icon }) => {
-        const isActive = active === label
-        return (
-          <button
-            key={label}
-            onClick={() => setActive(isActive ? null : label)}
-            className={`flex flex-col items-center gap-1.5 py-3 rounded-2xl border text-center transition-colors ${
-              isActive
-                ? "bg-primary text-primary-foreground border-primary"
-                : "bg-card text-foreground border-border"
-            }`}
-          >
-            <Icon className={`w-5 h-5 ${isActive ? "text-primary-foreground" : "text-primary"}`} />
-            <span className="text-[9px] font-medium leading-tight">{label}</span>
-          </button>
-        )
-      })}
-    </div>
-  )
-}
-
-function DestinationCreatorRow({ creator }: { creator: typeof destinationCreators[0] }) {
-  return (
-    <div className="flex items-center gap-3 px-4 py-3 bg-card rounded-2xl border border-border shadow-sm">
-      <div className="w-14 h-14 flex-shrink-0 rounded-xl overflow-hidden">
-        <AdventureImageCarousel
-          images={creator.coverImages}
-          alt={creator.name}
-          aspectRatio="aspect-square"
-          dotsPosition="below"
-        />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-foreground leading-tight">{creator.name}</p>
-        <div className="flex items-center gap-1 mt-0.5 text-muted-foreground">
-          <MapPin className="w-3 h-3 flex-shrink-0" />
-          <span className="text-xs">{creator.location}</span>
-        </div>
-        <div className="flex flex-wrap gap-1 mt-1">
-          {creator.topCategories.slice(0, 2).map((cat) => (
-            <span key={cat} className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
-              {cat}
-            </span>
-          ))}
-        </div>
-      </div>
-      <button className="flex-shrink-0 px-3 py-1.5 rounded-xl border border-primary text-primary text-xs font-semibold hover:bg-primary/5 transition-colors">
-        View
-      </button>
-    </div>
-  )
-}
-
-// ─── Search Results ────────────────────────────────────────────────────────────
 
 function SearchResults({ query }: { query: string }) {
-  const filteredPeople = [...topCreators, ...risingExplorers].filter(
+  const filteredExplorers = explorers.filter(
     (c) =>
       c.name.toLowerCase().includes(query.toLowerCase()) ||
       c.handle.toLowerCase().includes(query.toLowerCase()) ||
       c.location.toLowerCase().includes(query.toLowerCase())
   )
-  const filteredAdventures = standoutAdventures.filter(
+  const filteredAdventures = popularAdventures.filter(
     (a) =>
       a.title.toLowerCase().includes(query.toLowerCase()) ||
       a.location.toLowerCase().includes(query.toLowerCase()) ||
@@ -370,11 +198,11 @@ function SearchResults({ query }: { query: string }) {
   return (
     <div className="flex-1 overflow-y-auto pb-28 px-5 flex flex-col gap-6 pt-4">
       {/* People */}
-      {filteredPeople.length > 0 && (
+      {filteredExplorers.length > 0 && (
         <section>
           <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">People</h3>
           <div className="flex flex-col gap-2">
-            {filteredPeople.map((c) => (
+            {filteredExplorers.map((c) => (
               <div key={c.id} className="flex items-center gap-3 px-4 py-3 bg-card rounded-2xl border border-border shadow-sm">
                 <Avatar className="w-10 h-10 flex-shrink-0">
                   <AvatarImage src={c.avatar} alt={c.name} />
@@ -427,7 +255,7 @@ function SearchResults({ query }: { query: string }) {
         </section>
       )}
 
-      {filteredPeople.length === 0 && filteredAdventures.length === 0 && (
+      {filteredExplorers.length === 0 && filteredAdventures.length === 0 && (
         <div className="flex flex-col items-center justify-center pt-16 text-center">
           <Compass className="w-10 h-10 text-muted-foreground/40 mb-3" />
           <p className="text-sm font-medium text-foreground">No results for &ldquo;{query}&rdquo;</p>
@@ -479,53 +307,27 @@ export function DiscoverScreen() {
       ) : (
         <div className="flex-1 overflow-y-auto pb-28 flex flex-col gap-6 pt-2">
 
-          {/* 1. Creators To Explore */}
+          {/* 1. Explore Adventurers */}
           <section>
-            <SectionHeader title="Creators To Explore" onSeeAll={() => {}} />
+            <SectionHeader title="Explore Adventurers" onSeeAll={() => {}} />
             <div className="overflow-x-auto scrollbar-hide pl-5 pr-3">
               <div className="flex gap-3 w-max pr-2">
-                {topCreators.map((c) => (
-                  <CreatorCard key={c.id} creator={c} />
+                {explorers.map((c) => (
+                  <CreatorCard key={c.id} explorer={c} />
                 ))}
               </div>
             </div>
           </section>
 
-          {/* 2. Rising Explorers */}
+          {/* 2. Popular Adventures */}
           <section>
-            <SectionHeader title="Rising Explorers" onSeeAll={() => {}} />
-            <div className="px-5 flex flex-col gap-2">
-              {risingExplorers.map((c) => (
-                <RisingExplorerRow key={c.id} creator={c} />
-              ))}
-            </div>
-          </section>
-
-          {/* 3. Standout Adventures */}
-          <section>
-            <SectionHeader title="Standout Adventures" onSeeAll={() => {}} />
+            <SectionHeader title="Popular Adventures" onSeeAll={() => {}} />
             <div className="overflow-x-auto scrollbar-hide pl-5 pr-3">
               <div className="flex gap-3 w-max pr-2">
-                {standoutAdventures.map((a) => (
+                {popularAdventures.map((a) => (
                   <StandoutAdventureCard key={a.title} adventure={a} />
                 ))}
               </div>
-            </div>
-          </section>
-
-          {/* 4. Browse By Category */}
-          <section>
-            <SectionHeader title="Browse By Category" />
-            <CategoryGrid />
-          </section>
-
-          {/* 5. Destination Creators */}
-          <section>
-            <SectionHeader title="Destination Creators" onSeeAll={() => {}} />
-            <div className="px-5 flex flex-col gap-2">
-              {destinationCreators.map((c) => (
-                <DestinationCreatorRow key={c.id} creator={c} />
-              ))}
             </div>
           </section>
         </div>
