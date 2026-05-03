@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Map, Bookmark, User, LogOut, MapPin, Star, Heart, Plus, ChevronRight, Eye, Telescope } from "lucide-react"
+import { Home, Map, Bookmark, User, Settings, MapPin, Star, Heart, Plus, ChevronRight, Eye, Telescope } from "lucide-react"
 import { useState } from "react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { AdventureImageCarousel } from "@/components/adventure-image-carousel"
@@ -58,9 +58,10 @@ const userAdventures = [
 
 interface ProfileScreenProps {
   onNavigateToSidekicks?: () => void
+  onNavigateToSettings?: () => void
 }
 
-export function ProfileScreen({ onNavigateToSidekicks }: ProfileScreenProps) {
+export function ProfileScreen({ onNavigateToSidekicks, onNavigateToSettings }: ProfileScreenProps) {
   const [activeTab, setActiveTab] = useState<"profile">("profile")
 
   return (
@@ -72,8 +73,12 @@ export function ProfileScreen({ onNavigateToSidekicks }: ProfileScreenProps) {
       <div className="bg-[#5a8a7a] px-5 pb-8 flex-shrink-0">
         <div className="flex justify-between items-start mb-4">
           <div />
-          <button className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-            <LogOut className="w-5 h-5 text-white" />
+          <button
+            onClick={onNavigateToSettings}
+            className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
+            aria-label="Open settings"
+          >
+            <Settings className="w-5 h-5 text-white" />
           </button>
         </div>
 

@@ -12,6 +12,7 @@ import { PostScreen } from "@/components/screens/post-screen"
 import { ProfileScreen } from "@/components/screens/profile-screen"
 import { SidekicksScreen } from "@/components/screens/sidekicks-screen"
 import { SidekickProfileScreen, type SidekickUser } from "@/components/screens/sidekick-profile-screen"
+import { SettingsScreen } from "@/components/screens/settings-screen"
 import { cn } from "@/lib/utils"
 
 const screens = [
@@ -25,6 +26,7 @@ const screens = [
   { id: "profile", name: "Profile", component: ProfileScreen, color: "from-teal-700 to-teal-900" },
   { id: "sidekicks", name: "Sidekicks", component: SidekicksScreen, color: "from-emerald-600 to-emerald-800" },
   { id: "sidekick-profile", name: "Sidekick Profile", component: SidekickProfileScreen, color: "from-teal-600 to-teal-800" },
+  { id: "settings", name: "Settings", component: SettingsScreen, color: "from-slate-600 to-slate-800" },
 ]
 
 export default function Page() {
@@ -42,11 +44,16 @@ export default function Page() {
     setActiveScreen("sidekick-profile")
   }
   const handleBackFromSidekickProfile = () => setActiveScreen("sidekicks")
+  const handleNavigateToSettings = () => setActiveScreen("settings")
+  const handleBackFromSettings = () => setActiveScreen("profile")
 
   // Create props for components that need navigation
   const getComponentProps = (screenId: string) => {
     if (screenId === "profile") {
-      return { onNavigateToSidekicks: handleNavigateToSidekicks }
+      return { onNavigateToSidekicks: handleNavigateToSidekicks, onNavigateToSettings: handleNavigateToSettings }
+    }
+    if (screenId === "settings") {
+      return { onBack: handleBackFromSettings }
     }
     if (screenId === "sidekicks") {
       return { onBack: handleBackFromSidekicks, onSelectUser: handleSelectSidekick }
